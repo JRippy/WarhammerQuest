@@ -1,22 +1,26 @@
 import React from 'react';
 import axios from 'axios';
 import querystring from 'querystring';
+import co from 'co';
+
+const MongoClient = require('mongodb').MongoClient;
+const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true"
+
+import Content from '../containers/Content';
+import Sidebar from '../containers/Sidebar';
 
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: null,
-      password: null,
-      authenticated: false,
-      accessToken: null,
+      activeTab: 0,
       monsters: []
     }
   }
 
   componentDidMount() {
-    this.connenctToServer();
+    this.loadMonsters();
   }
 
   render() {
@@ -24,28 +28,17 @@ export default class Main extends React.Component {
       <div id="main">
 
         <div id="sidebar">
-          <button className="btn btn-outline-dark" onClick={() => this.loadMonsters()}>Load monsters</button>
+          <Sidebar
+            loadMonsters={() => this.loadMonsters()}
+            changeTab={(i) => this.setState({activeTab: i})}
+          />
         </div>
 
         <div id="content">
-          <h1>Warhammer Quest</h1>
-
-          <div className="container-fluid">
-            <div className="row">
-              {this.state.monsters.map((monster, index) => (
-                <div key={index} className="col-md-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">{monster.name}</h4>
-                      <h6 className="text-muted">Race: {monster.race}</h6>
-                      <h6 className="text-muted">Species: {monster.species}</h6>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
+          <Content
+            activeTab={this.state.activeTab}
+            monsters={this.state.monsters}
+          />
         </div>
 
         <style jsx>{`
@@ -63,6 +56,7 @@ export default class Main extends React.Component {
             height: 100%;
           }
           #content {
+            flex: 1;
             overflow-y: auto;
           }
         `}</style>
@@ -70,41 +64,16 @@ export default class Main extends React.Component {
     );
   }
 
-  connenctToServer() {
-    axios.post('https://???????????.herokuapp.com/oauth/token', querystring.stringify({
-      // 'form_params': {
-      'grant_type': 'password',
-      'client_id': 1,
-      'client_secret': 'DHDxY2KWlSq41JO8XkTNSieGuIvmztFbZWg8AcvT',
-      'username': this.state.username,
-      'password': this.state.password,
-      'scope': '*',
-      // }
-    }))
-    .then(response => {
-      console.log(response);
-      // callback({'authenticated': true, 'accessToken': response.data.access_token});
-      this.setState({'authenticated': true, 'accessToken': response.data.access_token})
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  }
-
   loadMonsters() {
-    axios.get('https://whq.herokuapp.com/api/monsters', {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ' + this.state.token
-      }
-    })
-    .then((response) => {
-      console.log(response.data.data);
-      // callback({tournamentsLoaded: true, tournaments: response.data.data, selected: response.data.data[0].id});
-      this.setState({monsters: response.data.data});
-    })
-    .catch(function (error) {
-      console.log(error);
+    const self = this;
+    MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+      co(function*() {
+        const collection = client.db("WarhammerQuest").collection("Monsters");
+        const docs = yield collection.find({}).toArray();
+        console.log(docs);
+        self.setState({monsters: docs});
+        client.close();
+      })
     });
   }
 }

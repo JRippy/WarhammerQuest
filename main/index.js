@@ -41,6 +41,8 @@ app.on('ready', async () => {
   const url = isDev ? devPath : prodPath
   mainWindow.loadURL(url)
 
+  mainWindow.maximize()
+
   mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {

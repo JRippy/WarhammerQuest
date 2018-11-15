@@ -29,8 +29,10 @@
     "app-root-path": "2.0.1",
     "axios": "^0.17.1",
     "bufferutil": "^3.0.3",
+    "co": "^4.6.0",
     "electron-is-dev": "0.3.0",
     "electron-next": "3.1.1",
+    "mongodb": "^3.1.9",
     "react-table": "^6.8.0",
     "utf-8-validate": "^4.0.0"
   }
