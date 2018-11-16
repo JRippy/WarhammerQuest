@@ -2,7 +2,9 @@ import React from 'react';
 import co from 'co';
 
 const MongoClient = require('mongodb').MongoClient;
-const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true"
+const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true";
+
+import CreateMonster from '../containers/CreateMonster';
 
 export default class Content extends React.Component {
   constructor(props) {
@@ -12,7 +14,9 @@ export default class Content extends React.Component {
       monsterInputName: '',
       monsterInputSpecies: '',
       monsterInputRace: '',
-      insertingToDB: false
+      insertingToDB: false,
+      insertSuccess: false,
+      monster: null
     }
   }
 
@@ -38,8 +42,8 @@ export default class Content extends React.Component {
                   <div className="card">
                     <div className="card-body">
                       <h4 className="card-title">{monster.name}</h4>
-                      <h6 className="text-muted">Race: {monster.race}</h6>
                       <h6 className="text-muted">Species: {monster.species}</h6>
+                      <h6 className="text-muted">Race: {monster.race}</h6>
                     </div>
                   </div>
                 </div>
@@ -50,35 +54,9 @@ export default class Content extends React.Component {
         : ''
       }
       {this.props.activeTab == 1 ?
-        <div className="container">
-          <h1 className="display-4">Add Monster</h1>
-          <hr/>
-          <div className="row align-items-center">
-            <div className="col-md-6 offset-md-3 card addMonsterCard">
-              <div className="card-body">
-                <div className="form-group">
-                  <label htmlFor="name">Name:</label>
-                  <input type="text" className="form-control" id="name" placeholder="Name" value={this.state.monsterInputName} onChange={(event) => this.setState({monsterInputName: event.target.value})}/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="species">Species:</label>
-                  <input type="text" className="form-control" id="species" placeholder="Species" value={this.state.monsterInputSpecies} onChange={(event) => this.setState({monsterInputSpecies: event.target.value})}/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="race">Race:</label>
-                  <input type="text" className="form-control" id="race" placeholder="Race" value={this.state.monsterInputRace} onChange={(event) => this.setState({monsterInputRace: event.target.value})}/>
-                </div>
-                {this.state.insertingToDB ?
-                  <div className="progress">
-                    <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
-                  </div>
-                  :
-                  <button className="btn btn-outline-dark" onClick={() => this.addMonsterToDB()}>Add Monster</button>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
+        <CreateMonster
+          addMonster={(monster) => this.props.addMonster(monster)}
+        />
         : ''
       }
 
@@ -100,19 +78,35 @@ export default class Content extends React.Component {
       );
     }
 
-    addMonsterToDB() {
-      // this.setState({insertingToDB: true});
-      const self = this;
-      MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-        co(function*() {
-          const result = yield client.db("WarhammerQuest").collection('Monsters').insertOne({
-            "name": self.state.monsterInputName,
-            "species": self.state.monsterInputSpecies,
-            "race": self.state.monsterInputRace
-          });
-
-          client.close();
-        })
-      });
-    }
+    // addMonsterToDB() {
+    //   const self = this;
+    //   self.setState({insertingToDB: true, insertSuccess: false});
+    //   MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+    //     co(function*() {
+    //       try {
+    //         const result = yield client.db("WarhammerQuest").collection('Monsters').insertOne({
+    //           "name": self.state.monsterInputName,
+    //           "species": self.state.monsterInputSpecies,
+    //           "race": self.state.monsterInputRace
+    //         });
+    //
+    //         console.log(result.ops[0]);
+    //         const monster = result.ops[0];
+    //         self.props.addMonster(monster);
+    //
+    //         self.setState({
+    //           insertingToDB: false,
+    //           insertSuccess: true,
+    //           monsterInputName: '',
+    //           monsterInputSpecies: '',
+    //           monsterInputRace: '',
+    //           monster: monster
+    //         });
+    //       } catch (e) {
+    //         console.log(e);
+    //       }
+    //       client.close();
+    //     })
+    //   });
+    // }
   }

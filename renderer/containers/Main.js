@@ -15,6 +15,8 @@ export default class Main extends React.Component {
 
     this.state = {
       activeTab: 0,
+      species: [],
+      race: [],
       monsters: []
     }
   }
@@ -38,6 +40,7 @@ export default class Main extends React.Component {
           <Content
             activeTab={this.state.activeTab}
             monsters={this.state.monsters}
+            addMonster={(monster) => this.addMonster(monster)}
           />
         </div>
 
@@ -68,12 +71,29 @@ export default class Main extends React.Component {
     const self = this;
     MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
       co(function*() {
-        const collection = client.db("WarhammerQuest").collection("Monsters");
-        const docs = yield collection.find({}).toArray();
-        console.log(docs);
-        self.setState({monsters: docs});
+        const collection1 = client.db("WarhammerQuest").collection("Species");
+        const docs1 = yield collection1.find({}).toArray();
+        console.log(docs1);
+        self.setState({monsters: docs1});
+
+        const collection2 = client.db("WarhammerQuest").collection("Race");
+        const docs2 = yield collection2.find({}).toArray();
+        console.log(docs2);
+        self.setState({monsters: docs2});
+
+        const collection3 = client.db("WarhammerQuest").collection("Monsters");
+        const docs3 = yield collection3.find({}).toArray();
+        console.log(docs3);
+        self.setState({monsters: docs3});
+
         client.close();
       })
     });
+  }
+
+  addMonster(monster) {
+    var monsters = this.state.monsters;
+    monsters.push(monster);
+    this.setState({monsters: monsters});
   }
 }
