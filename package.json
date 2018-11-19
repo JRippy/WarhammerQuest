@@ -27,16 +27,16 @@
   },
   "dependencies": {
     "app-root-path": "2.0.1",
-    "at.js": "^1.5.4",
-    "axios": "^0.17.1",
+    "bson-ext": "^2.0.1",
     "bufferutil": "^3.0.3",
     "co": "^4.6.0",
     "electron-is-dev": "0.3.0",
     "electron-next": "3.1.1",
-    "jquery": "^3.3.1",
-    "jquery.caret": "^0.3.1",
     "mongodb": "^3.1.9",
+    "mongodb-extjson": "^3.0.3",
+    "react-select": "^2.1.1",
     "react-table": "^6.8.0",
+    "snappy": "^6.1.1",
     "utf-8-validate": "^4.0.0"
   }
 }

@@ -14,7 +14,9 @@ export default class Sidebar extends React.Component {
       <div id="sidebar">
         <div className="menuItem" onClick={() => this.props.changeTab(0)}>Monsters</div>
         <div className="menuItem" onClick={() => this.props.changeTab(1)}>Add Monster</div>
-        <button className="btn btn-outline-dark" onClick={() => this.props.loadMonsters()}>Load monsters</button>
+        <div className="menuItem" onClick={() => this.props.changeTab(2)}>Add Species</div>
+        <div className="menuItem" onClick={() => this.props.changeTab(3)}>Add Race</div>
+        {/* <button className="btn btn-outline-dark" onClick={() => this.props.loadMonsters()}>Load monsters</button> */}
 
         <style jsx>{`
           div {

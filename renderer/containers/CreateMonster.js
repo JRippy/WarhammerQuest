@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 import co from 'co';
 
 const MongoClient = require('mongodb').MongoClient;
@@ -14,7 +15,11 @@ export default class CreateMonster extends React.Component {
       monsterInputRace: '',
       insertingToDB: false,
       insertSuccess: false,
-      monster: null
+      monster: null,
+      race: [],
+      selectedSpecies: false,
+      selectedRace: false,
+      loadingRace: true
     }
   }
 
@@ -33,35 +38,82 @@ export default class CreateMonster extends React.Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="species">Species:</label>
-                  <input type="text" className="form-control" id="species" placeholder="Species" value={this.state.monsterInputSpecies} onChange={(event) => this.setState({monsterInputSpecies: event.target.value})}/>
+                  {/* <input type="text" className="form-control" id="species" placeholder="Species" value={this.state.monsterInputSpecies} onChange={(event) => this.setState({monsterInputSpecies: event.target.value})}/> */}
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable={false}
+                    isSearchable={true}
+                    name="color"
+                    options={this.props.species}
+                    onChange={(selected) => this.onChangeSpecies(selected)}
+                  />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="race">Race:</label>
-                  <input type="text" className="form-control" id="race" placeholder="Race" value={this.state.monsterInputRace} onChange={(event) => this.setState({monsterInputRace: event.target.value})}/>
-                </div>
-                {this.state.insertingToDB ?
-                  <div className="progress">
-                    <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
-                  </div>
-                  :
+                {this.state.selectedSpecies ?
                   <div>
-                    <button className="btn btn-outline-dark" onClick={() => this.addMonsterToDB()}>Add Monster</button>
-                    {this.state.insertSuccess ?
-                      <div>
-                        <h3><span className="badge badge-success">Monster Added</span></h3>
-                        <h6>{this.state.monster.name}</h6>
-                        <h6 className="text-muted">Species: {this.state.monster.species}</h6>
-                        <h6 className="text-muted">Race: {this.state.monster.race}</h6>
+                    {this.state.loadingRace ?
+                      <div className="progress">
+                        <div className="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
                       </div>
-                      : ''
+                      :
+                      <div>
+                        <div className="form-group">
+                          <label htmlFor="race">Race:</label>
+                          {/* <input type="text" className="form-control" id="race" placeholder="Race" value={this.state.monsterInputRace} onChange={(event) => this.setState({monsterInputRace: event.target.value})}/> */}
+                          <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            isLoading={false}
+                            isClearable={false}
+                            isSearchable={true}
+                            name="color"
+                            options={this.state.race}
+                            onChange={(selected) => this.onChangeRace(selected)}
+                          />
+                        </div>
+                        {this.state.insertingToDB ?
+                          <div className="progress">
+                            <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
+                          </div>
+                          :
+                          <div>
+                            {this.state.selectedRace ?
+                              <button className="btn btn-outline-dark" onClick={() => this.addMonsterToDB()}>Add Monster</button>
+                              : ''
+                            }
+                          </div>
+                        }
+                      </div>
                     }
                   </div>
+                  : ''
+                }
+                {this.state.insertSuccess ?
+                  <div>
+                    <h3><span className="badge badge-success">Monster Added</span></h3>
+                    <h6>{this.state.monster.name}</h6>
+                    <h6 className="text-muted">Species: {this.state.monster.species}</h6>
+                    <h6 className="text-muted">Race: {this.state.monster.race}</h6>
+                  </div>
+                  : ''
                 }
               </div>
             </div>
           </div>
         </div>
 
+        <style jsx global>{`
+          .css-xp4uvy,
+          .css-1492t68 {
+            padding-top: 5px;
+          }
+          .css-15k3avv {
+            height: auto;
+            max-height: 300px;
+            overflow-y: auto;
+          }
+        `}</style>
       <style jsx>{`
         div {
           height: auto;
@@ -73,8 +125,34 @@ export default class CreateMonster extends React.Component {
           margin-top: 150px;
         }
         `}</style>
+
         </div>
       );
+    }
+
+    onChangeSpecies(selected) {
+      console.log(selected);
+      this.setState({selectedSpecies: true, loadingRace: true});
+      const self = this;
+      MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+        co(function*() {
+          const collection1 = client.db("WarhammerQuest").collection("Race");
+          var docs1 = yield collection1.find({species: selected.name}).toArray();
+          for(let i in docs1) {
+            docs1[i].value = docs1[i].name;
+            docs1[i].label = docs1[i].name;
+          }
+          console.log(docs1);
+          self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
+
+          client.close();
+        })
+      });
+    }
+
+    onChangeRace(selected) {
+      console.log(selected);
+      this.setState({selectedRace: true, monsterInputRace: selected.name});
     }
 
     addMonsterToDB() {
@@ -99,7 +177,9 @@ export default class CreateMonster extends React.Component {
               monsterInputName: '',
               monsterInputSpecies: '',
               monsterInputRace: '',
-              monster: monster
+              monster: monster,
+              selectedSpecies: false,
+              selectedRace: false
             });
           } catch (e) {
             console.log(e);

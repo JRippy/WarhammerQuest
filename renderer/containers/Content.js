@@ -5,6 +5,8 @@ const MongoClient = require('mongodb').MongoClient;
 const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true";
 
 import CreateMonster from '../containers/CreateMonster';
+import CreateRace from '../containers/CreateRace';
+import CreateSpecies from '../containers/CreateSpecies';
 
 export default class Content extends React.Component {
   constructor(props) {
@@ -55,7 +57,22 @@ export default class Content extends React.Component {
       }
       {this.props.activeTab == 1 ?
         <CreateMonster
+          species={this.props.species}
+          race={this.props.race}
           addMonster={(monster) => this.props.addMonster(monster)}
+        />
+        : ''
+      }
+      {this.props.activeTab == 2 ?
+        <CreateSpecies
+          addSpecies={(species) => this.props.addSpecies(species)}
+        />
+        : ''
+      }
+      {this.props.activeTab == 3 ?
+        <CreateRace
+          species={this.props.species}
+          addRace={(race) => this.props.addRace(race)}
         />
         : ''
       }

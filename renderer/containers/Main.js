@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios';
-import querystring from 'querystring';
 import co from 'co';
 
 const MongoClient = require('mongodb').MongoClient;
@@ -40,7 +38,11 @@ export default class Main extends React.Component {
           <Content
             activeTab={this.state.activeTab}
             monsters={this.state.monsters}
+            species={this.state.species}
+            race={this.state.race}
             addMonster={(monster) => this.addMonster(monster)}
+            addSpecies={(species) => this.addSpecies(species)}
+            addRace={(race) => this.addRace(race)}
           />
         </div>
 
@@ -72,14 +74,18 @@ export default class Main extends React.Component {
     MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
       co(function*() {
         const collection1 = client.db("WarhammerQuest").collection("Species");
-        const docs1 = yield collection1.find({}).toArray();
+        var docs1 = yield collection1.find({}).toArray();
+        for(let i in docs1) {
+          docs1[i].value = docs1[i].name;
+          docs1[i].label = docs1[i].name;
+        }
         console.log(docs1);
-        self.setState({monsters: docs1});
+        self.setState({species: docs1});
 
         const collection2 = client.db("WarhammerQuest").collection("Race");
         const docs2 = yield collection2.find({}).toArray();
         console.log(docs2);
-        self.setState({monsters: docs2});
+        self.setState({race: docs2});
 
         const collection3 = client.db("WarhammerQuest").collection("Monsters");
         const docs3 = yield collection3.find({}).toArray();
@@ -95,5 +101,17 @@ export default class Main extends React.Component {
     var monsters = this.state.monsters;
     monsters.push(monster);
     this.setState({monsters: monsters});
+  }
+
+  addSpecies(s) {
+    var species = this.state.species;
+    species.push(s);
+    this.setState({species: species});
+  }
+
+  addRace(r) {
+    var race = this.state.race;
+    race.push(r);
+    this.setState({race: race});
   }
 }

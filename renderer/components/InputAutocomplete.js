@@ -1,10 +1,6 @@
 import React from 'react';
 import co from 'co';
 
-import 'jquery';
-import 'jquery.caret';
-import 'at.js';
-
 const MongoClient = require('mongodb').MongoClient;
 const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true"
 
@@ -38,6 +34,6 @@ export default class InputAutocomplete extends React.Component {
     }
 
     linkAt() {
-      
+
     }
   }
