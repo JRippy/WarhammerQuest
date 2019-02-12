@@ -56,6 +56,63 @@ export default class Content extends React.Component {
         : ''
       }
       {this.props.activeTab == 1 ?
+        <div className="container">
+          <h1 className="display-4">Races</h1>
+          <hr/>
+          {this.props.race.length == 0 ?
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
+                <div className="progress">
+                  <div className="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
+                </div>
+              </div>
+            </div>
+            :
+            <div className="row">
+              {this.props.race.map((race, index) => (
+                <div key={index} className="col-md-10 offset-md-1">
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="text-title">{race.name}</h4>
+                      <h6 className="text-muted">Species: {race.species}</h6>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+        </div>
+        : ''
+      }
+      {this.props.activeTab == 2 ?
+        <div className="container">
+          <h1 className="display-4">Species</h1>
+          <hr/>
+          {this.props.species.length == 0 ?
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
+                <div className="progress">
+                  <div className="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
+                </div>
+              </div>
+            </div>
+            :
+            <div className="row">
+              {this.props.species.map((specie, index) => (
+                <div key={index} className="col-md-10 offset-md-1">
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="text-title">{specie.name}</h4>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+        </div>
+        : ''
+      }
+      {this.props.activeTab == 3 ?
         <CreateMonster
           species={this.props.species}
           race={this.props.race}
@@ -63,16 +120,16 @@ export default class Content extends React.Component {
         />
         : ''
       }
-      {this.props.activeTab == 2 ?
-        <CreateSpecies
-          addSpecies={(species) => this.props.addSpecies(species)}
-        />
-        : ''
-      }
-      {this.props.activeTab == 3 ?
+      {this.props.activeTab == 4 ?
         <CreateRace
           species={this.props.species}
           addRace={(race) => this.props.addRace(race)}
+        />
+        : ''
+      }
+      {this.props.activeTab == 5 ?
+        <CreateSpecies
+          addSpecies={(species) => this.props.addSpecies(species)}
         />
         : ''
       }

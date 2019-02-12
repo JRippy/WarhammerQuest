@@ -30,7 +30,7 @@ app.on('ready', async () => {
 
   mainWindow.setMenu(null);
 
-  const devPath = 'http://localhost:9000/start'
+  const devPath = 'http://localhost:8000/start'
 
   const prodPath = format({
     pathname: resolve('renderer/out/start/index.html'),
