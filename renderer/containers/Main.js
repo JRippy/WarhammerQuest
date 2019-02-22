@@ -15,7 +15,8 @@ export default class Main extends React.Component {
       activeTab: 0,
       species: [],
       race: [],
-      monsters: []
+      monsters: [],
+      editMonster: {}
     }
   }
 
@@ -45,9 +46,13 @@ export default class Main extends React.Component {
             monsters={this.state.monsters}
             species={this.state.species}
             race={this.state.race}
+            monster={this.state.editMonster}
             addMonster={(monster) => this.addMonster(monster)}
             addSpecies={(species) => this.addSpecies(species)}
             addRace={(race) => this.addRace(race)}
+            editMonster={(monster) => this.editMonster(monster)}
+            editSpecies={(species) => this.editSpecies(species)}
+            editRace={(race) => this.editRace(race)}
           />
         </div>
 
@@ -78,19 +83,19 @@ export default class Main extends React.Component {
       const self = this;
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {
-          const collection1 = client.db("WarhammerQuest").collection("Species");
-          var docs1 = yield collection1.find({}).toArray();
-          for(let i in docs1) {
-            docs1[i].value = docs1[i].name;
-            docs1[i].label = docs1[i].name;
-          }
-          console.log(docs1);
-          self.setState({species: docs1});
-
-          const collection2 = client.db("WarhammerQuest").collection("Race");
-          const docs2 = yield collection2.find({}).toArray();
-          console.log(docs2);
-          self.setState({race: docs2});
+          // const collection1 = client.db("WarhammerQuest").collection("Species");
+          // var docs1 = yield collection1.find({}).toArray();
+          // for(let i in docs1) {
+          //   docs1[i].value = docs1[i].name;
+          //   docs1[i].label = docs1[i].name;
+          // }
+          // console.log(docs1);
+          // self.setState({species: docs1});
+          //
+          // const collection2 = client.db("WarhammerQuest").collection("Race");
+          // const docs2 = yield collection2.find({}).toArray();
+          // console.log(docs2);
+          // self.setState({race: docs2});
 
           const collection3 = client.db("WarhammerQuest").collection("Monsters");
           const docs3 = yield collection3.find({}).toArray();
@@ -101,7 +106,6 @@ export default class Main extends React.Component {
         })
       });
     }
-
 
     loadRace() {
       const self = this;
@@ -119,39 +123,64 @@ export default class Main extends React.Component {
     }
 
 
-      loadSpecies() {
-        const self = this;
-        MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-          co(function*() {
-            const collection1 = client.db("WarhammerQuest").collection("Species");
-            var docs1 = yield collection1.find({}).toArray();
-            for(let i in docs1) {
-              docs1[i].value = docs1[i].name;
-              docs1[i].label = docs1[i].name;
-            }
-            console.log(docs1);
-            self.setState({species: docs1});
+    loadSpecies() {
+      const self = this;
+      MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+        co(function*() {
+          const collection1 = client.db("WarhammerQuest").collection("Species");
+          var docs1 = yield collection1.find({}).toArray();
+          for(let i in docs1) {
+            docs1[i].value = docs1[i].name;
+            docs1[i].label = docs1[i].name;
+          }
+          console.log(docs1);
+          self.setState({species: docs1});
 
-            client.close();
-          })
-        });
+          client.close();
+        })
+      });
+    }
+
+      addMonster(monster) {
+        console.log(1);
+        var monsters = this.state.monsters;
+        monsters.push(monster);
+        this.setState({monsters: monsters});
       }
 
-  addMonster(monster) {
-    var monsters = this.state.monsters;
-    monsters.push(monster);
-    this.setState({monsters: monsters});
-  }
+      addSpecies(s) {
+        var species = this.state.species;
+        species.push(s);
+        this.setState({species: species});
+      }
 
-  addSpecies(s) {
-    var species = this.state.species;
-    species.push(s);
-    this.setState({species: species});
-  }
+      addRace(r) {
+        var race = this.state.race;
+        race.push(r);
+        this.setState({race: race});
+      }
 
-  addRace(r) {
-    var race = this.state.race;
-    race.push(r);
-    this.setState({race: race});
-  }
+      editMonster(monster) {
+        console.log(monster);
+        console.log("Edit Monster N° :" + 6);
+        // var monsters = this.state.monsters;
+        // monsters.push(monster);
+        this.setState({activeTab: 6, editMonster: monster});
+      }
+
+      editSpecies(s) {
+        this.setState({activeTab: 7});
+        var species = this.state.species;
+        species.push(s);
+        this.setState({species: species});
+        // this.props.changeTab(7);
+      }
+
+      editRace(r) {
+        this.setState({activeTab: 8});
+        var race = this.state.race;
+        race.push(r);
+        this.setState({race: race});
+        // thi+s.props.changeTab(8);
+      }
 }

@@ -7,6 +7,9 @@ const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-q
 import CreateMonster from '../containers/CreateMonster';
 import CreateRace from '../containers/CreateRace';
 import CreateSpecies from '../containers/CreateSpecies';
+import EditMonster from '../containers/EditMonster';
+import EditRace from '../containers/EditRace';
+import EditSpecies from '../containers/EditSpecies';
 
 export default class Content extends React.Component {
   constructor(props) {
@@ -46,6 +49,9 @@ export default class Content extends React.Component {
                       <h4 className="card-title">{monster.name}</h4>
                       <h6 className="text-muted">Species: {monster.species}</h6>
                       <h6 className="text-muted">Race: {monster.race}</h6>
+                      <button onClick={() => {this.props.editMonster(monster)}}>
+                        Edit monster
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -130,6 +136,29 @@ export default class Content extends React.Component {
       {this.props.activeTab == 5 ?
         <CreateSpecies
           addSpecies={(species) => this.props.addSpecies(species)}
+        />
+        : ''
+      }
+
+      {this.props.activeTab == 6 ?
+        <EditMonster
+          monster={this.props.monster}
+          species={this.props.species}
+          race={this.props.race}
+          editMonster={(monster) => this.props.editMonster(monster)}
+        />
+        : ''
+      }
+      {this.props.activeTab == 7 ?
+        <EditRace
+          species={this.props.species}
+          editRace={(race) => this.props.editRace(race)}
+        />
+        : ''
+      }
+      {this.props.activeTab == 8 ?
+        <EditSpecies
+          editSpecies={(species) => this.props.editSpecies(species)}
         />
         : ''
       }
