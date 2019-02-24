@@ -9,11 +9,13 @@ export default class EditMonster extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log("Props Monster : ");
-    console.log(this.props.monster);
-    console.log("Props Species : ");
-    //console.log(this.props.species);
-    console.log(this.props.monster.species);
+    // console.log("Props Monster : ");
+    // console.log(this.props.monster);
+    // console.log("Props Species : ");
+    // console.log(this.props.monster.species);
+    // console.log("Props Race : ");
+    //console.log(this.props);
+    // console.log("Fin");
 
     this.state = {
       monsterInputName: this.props.monster.name,
@@ -56,8 +58,7 @@ export default class EditMonster extends React.Component {
                     isClearable={false}
                     isSearchable={true}
                     name="color"
-                    //value={this.props.monster.species}
-                    //defaultValue={this.props.monster.species}
+                    defaultValue={{ label: this.props.monster.species, value: 0 }}
                     options={this.props.species}
                     onChange={(selected) => this.onChangeSpecies(selected)}
                   />
@@ -80,8 +81,8 @@ export default class EditMonster extends React.Component {
                             isClearable={false}
                             isSearchable={true}
                             name="color"
-                            value={this.state.monsterInputRace}
                             option={this.state.race}
+                            defaultValue={{ label: this.props.monster.race, value: 0 }}
                             onChange={(selected) => this.onChangeRace(selected)}
                           />
                         </div>
