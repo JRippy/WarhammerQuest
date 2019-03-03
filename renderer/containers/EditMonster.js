@@ -81,7 +81,7 @@ export default class EditMonster extends React.Component {
                             isClearable={false}
                             isSearchable={true}
                             name="color"
-                            option={this.state.race}
+                            options={this.state.race}
                             defaultValue={{ label: this.props.monster.race, value: 0 }}
                             onChange={(selected) => this.onChangeRace(selected)}
                           />
@@ -145,6 +145,7 @@ export default class EditMonster extends React.Component {
     }
 
     onChangeSpecies(selected) {
+      console.log("Selected");
       console.log(selected);
       this.setState({selectedSpecies: true, loadingRace: true});
       const self = this;
@@ -156,6 +157,7 @@ export default class EditMonster extends React.Component {
             docs1[i].value = docs1[i].name;
             docs1[i].label = docs1[i].name;
           }
+          console.log("Docs1");
           console.log(docs1);
           self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
 
@@ -171,7 +173,7 @@ export default class EditMonster extends React.Component {
 
     editMonsterToDB() {
 
-      console.log("Edited monster");
+      //console.log("Edited monster");
 
       const self = this;
       self.setState({updatingToDB: true, updateSuccess: false});
@@ -179,18 +181,27 @@ export default class EditMonster extends React.Component {
         co(function*() {
           try {
 
-            console.log("State = " + this.state);
+            //console.log("State = ");
+            //console.log(self.state.monster);
+            //console.log(self.props.monster.name);
+            //console.log(self.state.monster.name);
+            //console.log(self.state.monsterInputName);
+            //console.log(self.state);
 
             const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
-              { name: this.state.monster.name },
+              { name: self.state.monster.name },
               {
-                  $set: { name: this.state.monsterInputName, species: this.state.monster.species, race:  this.state.monster.race},
+                  $set: {
+                    name: self.state.monsterInputName,
+                    species: self.state.monster.species,
+                    race:  self.state.monster.race},
                 $currentDate: { lastModified: true }
               }
           );
 
-            console.log(result.ops[0]);
-            const monster1 = result.ops[0];
+            //console.log(result);
+            //console.log(result.ops[0]);
+            const monster1 = result.result.ok;
             self.props.editMonster(monster1);
 
             console.log("Monster1 = " + monster1);
