@@ -106,9 +106,11 @@ export default class EditMonster extends React.Component {
                 {this.state.updateSuccess ?
                   <div>
                     <h3><span className="badge badge-success">Monster Edited</span></h3>
-                    <h6>{this.state.monster.name}</h6>
-                    <h6 className="text-muted">Species: {this.state.monster.species}</h6>
-                    <h6 className="text-muted">Race: {this.state.monster.race}</h6>
+                    <h6>{this.state.monster.monsterInputName}</h6>
+                    <h6 className="text-muted">Species: {this.state.monsterInputSpecies}</h6>
+                    <h6 className="text-muted">Race: {this.state.monsterInputRace}</h6>
+                    <h6>{console.log(this.state)}</h6>
+                    <h6>{console.log(this.props)}</h6>                                        
                   </div>
                   : ''
                 }
