@@ -4,12 +4,17 @@ import co from 'co';
 const MongoClient = require('mongodb').MongoClient;
 const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true";
 
-import CreateMonster from '../containers/CreateMonster';
-import CreateRace from '../containers/CreateRace';
-import CreateSpecies from '../containers/CreateSpecies';
-import EditMonster from '../containers/EditMonster';
-import EditRace from '../containers/EditRace';
-import EditSpecies from '../containers/EditSpecies';
+//In progress
+import ShowMonsters from '../containers/Show/ShowMonsters';
+import ShowRaces from '../containers/Show/ShowRaces';
+import ShowSpecies from '../containers/Show/ShowSpecies';
+
+import CreateMonster from '../containers/Creation/CreateMonster';
+import CreateRace from '../containers/Creation/CreateRace';
+import CreateSpecies from '../containers/Creation/CreateSpecies';
+import EditMonster from '../containers/Edition/EditMonster';
+import EditRace from '../containers/Edition/EditRace';
+import EditSpecies from '../containers/Edition/EditSpecies';
 
 export default class Content extends React.Component {
   constructor(props) {
@@ -29,93 +34,31 @@ export default class Content extends React.Component {
     return (
       <div id="content">
       {this.props.activeTab == 0 ?
-        <div className="container">
-          <h1 className="display-4">Monsters</h1>
-          <hr/>
-          {this.props.monsters.length == 0 ?
-            <div className="row">
-              <div className="col-md-8 offset-md-2">
-                <div className="progress">
-                  <div className="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
-                </div>
-              </div>
-            </div>
-            :
-            <div className="row">
-              {this.props.monsters.map((monster, index) => (
-                <div key={index} className="col-md-10 offset-md-1">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">{monster.name}</h4>
-                      <h6 className="text-muted">Species: {monster.species}</h6>
-                      <h6 className="text-muted">Race: {monster.race}</h6>
-                      <button onClick={() => {this.props.editMonster(monster)}}>
-                        Edit monster
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          }
-        </div>
-        : ''
+          <ShowMonsters
+            monsters={this.props.monsters}
+            species={this.props.species}
+            race={this.props.race}
+            addMonster={(monster) => this.props.addMonster(monster)}
+            editMonster={(monster) => this.props.editMonster(monster)}
+          />
+          : ''
       }
       {this.props.activeTab == 1 ?
-        <div className="container">
-          <h1 className="display-4">Races</h1>
-          <hr/>
-          {this.props.race.length == 0 ?
-            <div className="row">
-              <div className="col-md-8 offset-md-2">
-                <div className="progress">
-                  <div className="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
-                </div>
-              </div>
-            </div>
-            :
-            <div className="row">
-              {this.props.race.map((race, index) => (
-                <div key={index} className="col-md-10 offset-md-1">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="text-title">{race.name}</h4>
-                      <h6 className="text-muted">Species: {race.species}</h6>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          }
-        </div>
+        <ShowRaces
+          monsters={this.props.monsters}
+          species={this.props.species}
+          race={this.props.race}
+          addRaces={(race) => this.props.addRace(race)}
+        />
         : ''
       }
       {this.props.activeTab == 2 ?
-        <div className="container">
-          <h1 className="display-4">Species</h1>
-          <hr/>
-          {this.props.species.length == 0 ?
-            <div className="row">
-              <div className="col-md-8 offset-md-2">
-                <div className="progress">
-                  <div className="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
-                </div>
-              </div>
-            </div>
-            :
-            <div className="row">
-              {this.props.species.map((specie, index) => (
-                <div key={index} className="col-md-10 offset-md-1">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="text-title">{specie.name}</h4>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          }
-        </div>
+        <ShowSpecies
+          monsters={this.props.monsters}
+          species={this.props.species}
+          race={this.props.race}
+          addSpecies={(specie) => this.props.addSpecies(specie)}
+        />
         : ''
       }
       {this.props.activeTab == 3 ?
@@ -139,7 +82,6 @@ export default class Content extends React.Component {
         />
         : ''
       }
-
       {this.props.activeTab == 6 ?
         <EditMonster
           monster={this.props.monster}
@@ -180,36 +122,4 @@ export default class Content extends React.Component {
         </div>
       );
     }
-
-    // addMonsterToDB() {
-    //   const self = this;
-    //   self.setState({insertingToDB: true, insertSuccess: false});
-    //   MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-    //     co(function*() {
-    //       try {
-    //         const result = yield client.db("WarhammerQuest").collection('Monsters').insertOne({
-    //           "name": self.state.monsterInputName,
-    //           "species": self.state.monsterInputSpecies,
-    //           "race": self.state.monsterInputRace
-    //         });
-    //
-    //         console.log(result.ops[0]);
-    //         const monster = result.ops[0];
-    //         self.props.addMonster(monster);
-    //
-    //         self.setState({
-    //           insertingToDB: false,
-    //           insertSuccess: true,
-    //           monsterInputName: '',
-    //           monsterInputSpecies: '',
-    //           monsterInputRace: '',
-    //           monster: monster
-    //         });
-    //       } catch (e) {
-    //         console.log(e);
-    //       }
-    //       client.close();
-    //     })
-    //   });
-    // }
   }

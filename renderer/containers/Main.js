@@ -26,6 +26,19 @@ export default class Main extends React.Component {
     this.loadRace();
   }
 
+  componentWillReceiveProps(props) {
+
+  const { refresh, id } = this.props;
+  //const refresh = this.props.refresh;
+  //const id = this.props.id;
+
+  if (props.refresh !== refresh) {
+    this.loadMonsters();
+    this.loadSpecies();
+    this.loadRace();
+  }
+}
+
   render() {
     return (
       <div id="main">
@@ -50,6 +63,7 @@ export default class Main extends React.Component {
             addMonster={(monster) => this.addMonster(monster)}
             addSpecies={(species) => this.addSpecies(species)}
             addRace={(race) => this.addRace(race)}
+            //newEdit={(monster) => this.newEdit(monster)}
             editMonster={(monster) => this.editMonster(monster)}
             editSpecies={(species) => this.editSpecies(species)}
             editRace={(race) => this.editRace(race)}
@@ -100,6 +114,9 @@ export default class Main extends React.Component {
           const collection3 = client.db("WarhammerQuest").collection("Monsters");
           const docs3 = yield collection3.find({}).toArray();
           console.log(docs3);
+
+          //monster.edit = false;
+
           self.setState({monsters: docs3});
 
           client.close();
@@ -161,11 +178,13 @@ export default class Main extends React.Component {
       }
 
       editMonster(monster) {
-        console.log(monster);
         console.log("Edit Monster N° :" + 6);
+        console.log(monster);
         // var monsters = this.state.monsters;
         // monsters.push(monster);
         this.setState({activeTab: 6, editMonster: monster});
+        console.log("Finish Edit");
+        console.log(this.state);
       }
 
       editSpecies(s) {
@@ -181,6 +200,6 @@ export default class Main extends React.Component {
         var race = this.state.race;
         race.push(r);
         this.setState({race: race});
-        // thi+s.props.changeTab(8);
+        // this.props.changeTab(8);
       }
 }

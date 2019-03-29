@@ -17,6 +17,36 @@ export default class EditMonster extends React.Component {
     }
   }
 
+  editSpeciesToDB() {
+    const self = this;
+    self.setState({insertingToDB: true, insertSuccess: false});
+    MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+      co(function*() {
+        try {
+          const result = yield client.db("WarhammerQuest").collection('Species').insertOne({
+            "name": self.state.speciesInputName
+          });
+
+          console.log(result.ops[0]);
+          const species = result.ops[0];
+          species.label = species.name;
+          species.value = species.name;
+          self.props.addSpecies(species);
+
+          self.setState({
+            insertingToDB: false,
+            insertSuccess: true,
+            speciesInputName: '',
+            species: species
+          });
+        } catch (e) {
+          console.log(e);
+        }
+        client.close();
+      })
+    });
+  }
+
   render() {
     return (
       <div>
@@ -69,33 +99,4 @@ export default class EditMonster extends React.Component {
         );
       }
 
-      editSpeciesToDB() {
-        const self = this;
-        self.setState({insertingToDB: true, insertSuccess: false});
-        MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-          co(function*() {
-            try {
-              const result = yield client.db("WarhammerQuest").collection('Species').insertOne({
-                "name": self.state.speciesInputName
-              });
-
-              console.log(result.ops[0]);
-              const species = result.ops[0];
-              species.label = species.name;
-              species.value = species.name;
-              self.props.addSpecies(species);
-
-              self.setState({
-                insertingToDB: false,
-                insertSuccess: true,
-                speciesInputName: '',
-                species: species
-              });
-            } catch (e) {
-              console.log(e);
-            }
-            client.close();
-          })
-        });
-      }
-    }
+}

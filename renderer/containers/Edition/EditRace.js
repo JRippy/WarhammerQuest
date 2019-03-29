@@ -19,6 +19,42 @@ export default class EditRace extends React.Component {
     }
   }
 
+  onChangeSpecies(selected) {
+    console.log(selected);
+    this.setState({selectedSpecies: true, raceInputSpecies: selected.name});
+  }
+
+  editRaceToDB() {
+    const self = this;
+    self.setState({insertingToDB: true, insertSuccess: false});
+    MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+      co(function*() {
+        try {
+          const result = yield client.db("WarhammerQuest").collection('Race').insertOne({
+            "name": self.state.raceInputName,
+            "species": self.state.raceInputSpecies,
+          });
+
+          console.log(result.ops[0]);
+          const race = result.ops[0];
+          self.props.addRace(race);
+
+          self.setState({
+            insertingToDB: false,
+            insertSuccess: true,
+            raceInputName: '',
+            raceInputSpecies: '',
+            race: race,
+            selectedSpecies: false
+          });
+        } catch (e) {
+          console.log(e);
+        }
+        client.close();
+      })
+    });
+  }
+
   render() {
     return (
       <div>
@@ -99,39 +135,4 @@ export default class EditRace extends React.Component {
       );
     }
 
-    onChangeSpecies(selected) {
-      console.log(selected);
-      this.setState({selectedSpecies: true, raceInputSpecies: selected.name});
-    }
-
-    editRaceToDB() {
-      const self = this;
-      self.setState({insertingToDB: true, insertSuccess: false});
-      MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-        co(function*() {
-          try {
-            const result = yield client.db("WarhammerQuest").collection('Race').insertOne({
-              "name": self.state.raceInputName,
-              "species": self.state.raceInputSpecies,
-            });
-
-            console.log(result.ops[0]);
-            const race = result.ops[0];
-            self.props.addRace(race);
-
-            self.setState({
-              insertingToDB: false,
-              insertSuccess: true,
-              raceInputName: '',
-              raceInputSpecies: '',
-              race: race,
-              selectedSpecies: false
-            });
-          } catch (e) {
-            console.log(e);
-          }
-          client.close();
-        })
-      });
-    }
   }
