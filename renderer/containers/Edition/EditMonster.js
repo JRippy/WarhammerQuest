@@ -25,7 +25,6 @@ export default class EditMonster extends React.Component {
 
     onChangeSpecies(selected) {
       //console.log("Selected");
-      //console.log(selected);
       this.setState({selectedSpecies: true, loadingRace: true});
       const self = this;
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
@@ -46,13 +45,10 @@ export default class EditMonster extends React.Component {
     }
 
     onChangeRace(selected) {
-      //console.log(selected);
       this.setState({selectedRace: true, monsterInputRace: selected.name});
     }
 
     editMonsterToDB() {
-
-      //console.log("Edited monster");
 
       const self = this;
       self.setState({updatingToDB: true, updateSuccess: false});
@@ -61,11 +57,6 @@ export default class EditMonster extends React.Component {
           try {
 
             //console.log("State = ");
-            //console.log(self.state.monster);
-            //console.log(self.props.monster.name);
-            //console.log(self.state.monster.name);
-            //console.log(self.state.monsterInputName);
-            //console.log(self.state);
 
             const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
               { name: self.state.monster.name },
@@ -81,7 +72,9 @@ export default class EditMonster extends React.Component {
             //console.log(result);
             //console.log(result.ops[0]);
             const monster1 = result.result.ok;
-            const monsterEdited = self.state.monsterInputName;
+            const monsterNameEdited = self.state.monsterInputName;
+            const monsterSpeciesEdited = self.state.monster.species;
+            const monsterRaceEdited = self.state.monster.race;
             //self.props.editMonster(monster1);
 
             console.log("Monster1 = " + monster1);
@@ -89,10 +82,10 @@ export default class EditMonster extends React.Component {
             self.setState({
               updatingToDB: false,
               updateSuccess: true,
-              monsterInputName: '',
-              monsterInputSpecies: '',
-              monsterInputRace: '',
-              monster: monsterEdited,
+              monsterInputName: monsterNameEdited,
+              monsterInputSpecies: monsterSpeciesEdited,
+              monsterInputRace: monsterRaceEdited,
+              //monster: monsterEdited,
               selectedSpecies: false,
               selectedRace: false
             });
@@ -179,7 +172,7 @@ export default class EditMonster extends React.Component {
                     {this.state.updateSuccess ?
                       <div>
                         <h3><span className="badge badge-success">Monster Edited</span></h3>
-                        <h6>{this.state.monster.monsterInputName}</h6>
+                        <h6>Name : {this.state.monsterInputName}</h6>
                         <h6 className="text-muted">Species: {this.state.monsterInputSpecies}</h6>
                         <h6 className="text-muted">Race: {this.state.monsterInputRace}</h6>
                         <h6>{console.log(this.state)}</h6>
