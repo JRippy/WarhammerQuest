@@ -12,13 +12,20 @@ import ShowSpecies from '../containers/Show/ShowSpecies';
 import CreateMonster from '../containers/Creation/CreateMonster';
 import CreateRace from '../containers/Creation/CreateRace';
 import CreateSpecies from '../containers/Creation/CreateSpecies';
+
 import EditMonster from '../containers/Edition/EditMonster';
 import EditRace from '../containers/Edition/EditRace';
 import EditSpecies from '../containers/Edition/EditSpecies';
 
+import DeleteMonster from '../containers/Delete/DeleteMonster';
+import DeleteRace from '../containers/Delete/DeleteRace';
+import DeleteSpecies from '../containers/Delete/DeleteSpecies';
+
 export default class Content extends React.Component {
   constructor(props) {
     super(props);
+
+console.log(this.state);
 
     this.state = {
       monsterInputName: '',
@@ -26,7 +33,9 @@ export default class Content extends React.Component {
       monsterInputRace: '',
       insertingToDB: false,
       insertSuccess: false,
-      monster: null
+      monster: null,
+      race: null,
+      aSpecies: null
     }
   }
 
@@ -37,34 +46,34 @@ export default class Content extends React.Component {
           <ShowMonsters
             monsters={this.props.monsters}
             species={this.props.species}
-            race={this.props.race}
-            addMonster={(monster) => this.props.addMonster(monster)}
+            races={this.props.races}
             editMonster={(monster) => this.props.editMonster(monster)}
           />
           : ''
       }
       {this.props.activeTab == 1 ?
         <ShowRaces
-          monsters={this.props.monsters}
+          //monsters={this.props.monsters}
           species={this.props.species}
-          race={this.props.race}
-          addRaces={(race) => this.props.addRace(race)}
+          races={this.props.races}
+          editRace={(race) => this.props.editRace(race)}
         />
         : ''
       }
       {this.props.activeTab == 2 ?
         <ShowSpecies
-          monsters={this.props.monsters}
+          // monsters={this.props.monsters}
           species={this.props.species}
-          race={this.props.race}
-          addSpecies={(specie) => this.props.addSpecies(specie)}
+          races={this.props.races}
+          editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
+          deleteSpecies={(aSpecies) => this.props.deleteSpecies(aSpecies)}
         />
         : ''
       }
       {this.props.activeTab == 3 ?
         <CreateMonster
           species={this.props.species}
-          race={this.props.race}
+          races={this.props.races}
           addMonster={(monster) => this.props.addMonster(monster)}
         />
         : ''
@@ -85,14 +94,16 @@ export default class Content extends React.Component {
       {this.props.activeTab == 6 ?
         <EditMonster
           monster={this.props.monster}
+          races={this.props.races}
           species={this.props.species}
-          race={this.props.race}
           editMonster={(monster) => this.props.editMonster(monster)}
         />
         : ''
       }
       {this.props.activeTab == 7 ?
         <EditRace
+          race={this.props.race}
+          races={this.props.races}
           species={this.props.species}
           editRace={(race) => this.props.editRace(race)}
         />
@@ -100,7 +111,8 @@ export default class Content extends React.Component {
       }
       {this.props.activeTab == 8 ?
         <EditSpecies
-          editSpecies={(species) => this.props.editSpecies(species)}
+          aSpecies={this.props.aSpecies}
+          editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
         />
         : ''
       }

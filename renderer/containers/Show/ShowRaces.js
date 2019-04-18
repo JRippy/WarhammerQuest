@@ -9,13 +9,14 @@ export default class ShowRaces extends React.Component {
     constructor(props) {
       super(props);
 
+//console.log(this.props);
+
       this.state = {
-        monsterInputName: '',
         monsterInputSpecies: '',
         monsterInputRace: '',
-        insertingToDB: false,
-        insertSuccess: false,
-        monster: null
+        racesData: this.props.races,
+        race: null,
+        races: [],
       }
     }
 
@@ -28,7 +29,7 @@ export default class ShowRaces extends React.Component {
         <div className="container">
           <h1 className="display-4">Races</h1>
           <hr/>
-          {this.props.race.length == 0 ?
+          {this.props.races.length == 0 ?
             <div className="row">
               <div className="col-md-8 offset-md-2">
                 <div className="progress">
@@ -38,12 +39,18 @@ export default class ShowRaces extends React.Component {
             </div>
             :
             <div className="row">
-              {this.props.race.map((race, index) => (
+              {this.props.races.map((race, index) => (
                 <div key={index} className="col-md-10 offset-md-1">
                   <div className="card">
                     <div className="card-body">
                       <h4 className="text-title">{race.name}</h4>
                       <h6 className="text-muted">Species: {race.species}</h6>
+                      <button onClick={() => {this.props.editRace(race)}}>
+                        Edit race
+                      </button>
+                      <button onClick={() => alert('Delete in progress')}>
+                        Delete race....
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -10,13 +10,13 @@ export default class EditMonster extends React.Component {
     super(props);
 
     this.state = {
-      monsterInputName: this.props.monster.name,
-      monsterInputSpecies: this.props.monster.species,
-      monsterInputRace: this.props.monster.race,
-      editingToDB: false,
+      updatingToDB: false,
       updateSuccess: false,
       monster: this.props.monster,
       race: [],
+      monsterInputName: this.props.monster.name,
+      monsterInputSpecies: this.props.monster.species,
+      monsterInputRace: this.props.monster.race,
       selectedSpecies: false,
       selectedRace: false,
       loadingRace: true
@@ -35,8 +35,7 @@ export default class EditMonster extends React.Component {
             docs1[i].value = docs1[i].name;
             docs1[i].label = docs1[i].name;
           }
-          console.log("Docs1");
-          console.log(docs1);
+
           self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
 
           client.close();
@@ -56,39 +55,50 @@ export default class EditMonster extends React.Component {
         co(function*() {
           try {
 
-            //console.log("State = ");
-
             const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
               { name: self.state.monster.name },
               {
                   $set: {
                     name: self.state.monsterInputName,
-                    species: self.state.monster.species,
-                    race:  self.state.monster.race},
+                    species: self.state.monsterInputSpecies,
+                    race:  self.state.monsterInputRace},
                 $currentDate: { lastModified: true }
               }
           );
 
-            //console.log(result);
-            //console.log(result.ops[0]);
             const monster1 = result.result.ok;
             const monsterNameEdited = self.state.monsterInputName;
-            const monsterSpeciesEdited = self.state.monster.species;
-            const monsterRaceEdited = self.state.monster.race;
-            //self.props.editMonster(monster1);
+            const monsterSpeciesEdited = self.state.monsterInputSpecies;
+            const monsterRaceEdited = self.state.monsterInputRace;
 
-            console.log("Monster1 = " + monster1);
+            if (monster1 == 1) {
+              console.log("Monster Updated");
 
-            self.setState({
-              updatingToDB: false,
-              updateSuccess: true,
-              monsterInputName: monsterNameEdited,
-              monsterInputSpecies: monsterSpeciesEdited,
-              monsterInputRace: monsterRaceEdited,
-              //monster: monsterEdited,
-              selectedSpecies: false,
-              selectedRace: false
-            });
+              var monsterEdited = self.state.monster;
+              monsterEdited.name = monsterNameEdited;
+              monsterEdited.species = monsterSpeciesEdited;
+              monsterEdited.race = monsterRaceEdited;
+
+              self.setState({
+                updatingToDB: false,
+                updateSuccess: true,
+                monsterInputName: monsterNameEdited,
+                monsterInputSpecies: monsterSpeciesEdited,
+                monsterInputRace: monsterRaceEdited,
+                monster: monsterEdited,
+
+                selectedSpecies: false,
+                selectedRace: false
+              });
+
+              self.props.editMonster(self.state.monster);
+
+            }
+            else {
+              console.log("Monster Fail Update");
+            }
+
+
           } catch (e) {
             console.log(e);
           }
@@ -152,7 +162,7 @@ export default class EditMonster extends React.Component {
                                 onChange={(selected) => this.onChangeRace(selected)}
                               />
                             </div>
-                            {this.state.editingToDB ?
+                            {this.state.updatingToDB ?
                               <div className="progress">
                                 <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={{width: "100%"}}></div>
                               </div>
@@ -178,7 +188,10 @@ export default class EditMonster extends React.Component {
                         <h6>{console.log(this.state)}</h6>
                         <h6>{console.log(this.props)}</h6>
                       </div>
-                      : ''
+                      :''
+                      // <div>
+                      //   <h3><span className="badge badge-danger">Monster not Edited</span></h3>
+                      // </div>
                     }
                   </div>
                 </div>

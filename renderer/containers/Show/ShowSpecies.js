@@ -9,13 +9,13 @@ export default class ShowRaces extends React.Component {
     constructor(props) {
       super(props);
 
+console.log(this.props);
+
       this.state = {
-        monsterInputName: '',
-        monsterInputSpecies: '',
-        monsterInputRace: '',
-        insertingToDB: false,
-        insertSuccess: false,
-        monster: null
+        // monsterInputName: '',
+        // monsterInputSpecies: '',
+        // monsterInputRace: '',
+        species: null
       }
     }
 
@@ -44,6 +44,13 @@ export default class ShowRaces extends React.Component {
                 <div className="card">
                   <div className="card-body">
                     <h4 className="text-title">{specie.name}</h4>
+                    <button onClick={() => {this.props.editSpecies(specie)}}>
+                      Edit species
+                    </button>
+                    <button className='delete-button'
+                            onClick={(specie) => { if (window.confirm('Are you sure you wish to delete this species?')) this.props.deleteSpecies(specie) } }>
+                      Delete species
+                    </button>
                   </div>
                 </div>
               </div>
