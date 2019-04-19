@@ -25,7 +25,9 @@ export default class Content extends React.Component {
   constructor(props) {
     super(props);
 
-console.log(this.state);
+
+    console.log(this.state);
+    console.log(this.props);
 
     this.state = {
       monsterInputName: '',

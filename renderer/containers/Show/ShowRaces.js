@@ -9,7 +9,7 @@ export default class ShowRaces extends React.Component {
     constructor(props) {
       super(props);
 
-//console.log(this.props);
+      console.log(this.props);
 
       this.state = {
         monsterInputSpecies: '',
@@ -20,7 +20,17 @@ export default class ShowRaces extends React.Component {
       }
     }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+
+    console.log("ComponentReceive");
+    console.log(this.props);
+    console.log(nextProps);
+
+    const { refresh, id } = this.props;
+    if (nextProps.refresh !== refresh) {
+      this.fetchShoes(id)
+        .then(this.refreshShoeList)
+    }
   }
 
   render() {

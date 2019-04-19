@@ -9,6 +9,7 @@ export default class CreateMonster extends React.Component {
   constructor(props) {
     super(props);
 
+console.log("DeleteSpecies");
 console.log(this.props);
 
     this.state = {
@@ -70,6 +71,10 @@ console.log(this.props);
   //         </div>
   //       );
   //     }
+      deleteSpeciesTest() {
+          console.log("Test Deleted");
+          alert('Delete in progress');
+      }
 
       deleteSpeciesToDB() {
         const self = this;

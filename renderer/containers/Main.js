@@ -73,9 +73,6 @@ export default class Main extends React.Component {
             deleteMonster={(monster) => this.deleteMonster(monster)}
             deleteRace={(race) => this.deleteRace(race)}
             deleteSpecies={(species) => this.deleteSpecies(species)}
-            delMonster={this.state.deleteMonster}
-            delRace={this.state.deleteRace}
-            delSpecies={this.state.deleteSpecies}                   
           />
         </div>
 
@@ -213,6 +210,36 @@ export default class Main extends React.Component {
       }
 
       deleteSpecies(s) {
-        this.setState({activeTab: 2, deleteSpecies: s});
+        console.log("Delete Species");
+        console.log(this.state);
+        console.log(this.state.speciestoDelete);
+
+        const self = this;
+        self.setState({deletingToDB: true, deleteSuccess: false});
+
+//         MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+//           co(function*() {
+//             try {
+//               const result = yield client.db("WarhammerQuest").collection('Species').deleteOne({
+//                 "name": self.state.speciestoDelete
+//               });
+//
+//               console.log(result.ops[0]);
+//               const species = result.ops[0];
+// console.log(result);
+//               self.props.deleteSpecies(species);
+//
+//               self.setState({
+//                 deletingToDB: false,
+//                 deleteSuccess: true,
+//                 speciesInputName: '',
+//                 species: species
+//               });
+//             } catch (e) {
+//               console.log(e);
+//             }
+//             client.close();
+//           })
+//         });
       }
 }

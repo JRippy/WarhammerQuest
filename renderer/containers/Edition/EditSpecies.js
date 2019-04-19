@@ -63,6 +63,8 @@ console.log(this.props);
 
             var speciesEdited = self.state.species;
             speciesEdited.name = self.state.speciesInputName;
+            speciesEdited.value = self.state.speciesInputName;
+            speciesEdited.label = self.state.speciesInputName;
 
             self.setState({
               species: speciesEdited,
