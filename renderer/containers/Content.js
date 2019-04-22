@@ -16,10 +16,10 @@ import CreateSpecies from '../containers/Creation/CreateSpecies';
 import EditMonster from '../containers/Edition/EditMonster';
 import EditRace from '../containers/Edition/EditRace';
 import EditSpecies from '../containers/Edition/EditSpecies';
-
-import DeleteMonster from '../containers/Delete/DeleteMonster';
-import DeleteRace from '../containers/Delete/DeleteRace';
-import DeleteSpecies from '../containers/Delete/DeleteSpecies';
+// 
+// import DeleteMonster from '../containers/Delete/DeleteMonster';
+// import DeleteRace from '../containers/Delete/DeleteRace';
+// import DeleteSpecies from '../containers/Delete/DeleteSpecies';
 
 export default class Content extends React.Component {
   constructor(props) {

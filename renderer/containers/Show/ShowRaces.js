@@ -23,7 +23,9 @@ console.log(this.props);
 
 componentDidMount(){
 
-      this.displayListRace();
+      this.setState({
+        racesDisplay: this.displayListRace()
+      });
 
 }
 
@@ -43,13 +45,14 @@ componentDidMount(){
 //TODO finish
   displayListRace(){
 
-    var displayList = [];
+    var displayList = this.state.racesDisplay;
+    var raceTmp = {};
 
     this.props.races.map((race, indexR) => (
         this.props.species.map((species, indexS) => {
           if (race.idSpecies == species._id.toString()) {
 
-            const raceTmp = {name : race.name, species : species.name};
+            raceTmp = {name : race.name, species : species.name, idSpecies : species._id.toString()};
             displayList = displayList.concat(raceTmp);
 
           }
@@ -59,22 +62,22 @@ componentDidMount(){
     ));
 
     this.setState({
-      racesDisplay : [1,2,3]
-    });
-
-    this.setState({
+      monsterInputSpecies: 'Coucou',
+      monsterInputRace: 'Coucou',
       racesDisplay : displayList
     });
 
-    this.setState({
-      racesDisplay : [this.state.racesDisplay, displayList]
-    });
     // this.setState({
-    //   racesDisplay : racesDisplay.concat(displayList)
+    //   racesDisplay : [this.state.racesDisplay, displayList]
+    // });
+
+    // this.setState({
+    //   racesDisplay : this.state.racesDisplay.concat(displayList)
     // });
 
     console.log(displayList);
     console.log(this.state);
+    return displayList;
   }
 
   render() {
