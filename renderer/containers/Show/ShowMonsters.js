@@ -17,6 +17,33 @@ export default class ShowMonsters extends React.Component {
     }
 
   componentDidMount() {
+
+    //displayListMonster();
+
+  }
+
+  displayListMonster(){
+
+    var displayList = [];
+
+    console.log(this.props);
+
+    this.props.monsters.map((monster, indexM) => (
+      this.props.races.map((race, indexR) => (
+          this.props.species.map((species, indexS) => {
+            if (race.idSpecies == species._id.toString()) {
+
+              const raceTmp = {name : race.name, species : species.name};
+              displayList = displayList.concat(raceTmp);
+
+            }
+
+          }
+        )
+      ))
+    ));
+
+
   }
 
   render() {
@@ -45,8 +72,9 @@ export default class ShowMonsters extends React.Component {
                       <button onClick={() => {this.props.editMonster(monster)}}>
                         Edit monster
                       </button>
-                      <button onClick={() => alert('Delete in progress')}>
-                        Delete monster....
+                      <button className='delete-button'
+                              onClick={() => { if (window.confirm('Are you sure you wish to delete this monster?')) this.props.deleteMonster(monster) } }>
+                        Delete monster
                       </button>
                     </div>
                   </div>

@@ -13,6 +13,8 @@ export default class CreateMonster extends React.Component {
       monsterInputName: '',
       monsterInputSpecies: '',
       monsterInputRace: '',
+      monsterInputIDSpecies: '',
+      monsterInputIDRace: '',
       insertingToDB: false,
       insertSuccess: false,
       monster: null,
@@ -131,7 +133,6 @@ export default class CreateMonster extends React.Component {
     }
 
     onChangeSpecies(selected) {
-      console.log(selected);
       this.setState({selectedSpecies: true, loadingRace: true});
       const self = this;
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
@@ -141,9 +142,11 @@ export default class CreateMonster extends React.Component {
           for(let i in docs1) {
             docs1[i].value = docs1[i].name;
             docs1[i].label = docs1[i].name;
+            docs1[i].idRace = docs1[i]._id.toString();
           }
+          
           console.log(docs1);
-          self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
+          self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name, monsterInputIDSpecies: selected._id.toString()});
 
           client.close();
         })
@@ -151,25 +154,42 @@ export default class CreateMonster extends React.Component {
     }
 
     onChangeRace(selected) {
-      console.log(selected);
-      this.setState({selectedRace: true, monsterInputRace: selected.name});
+      this.setState({selectedRace: true, monsterInputRace: selected.name, monsterInputIDRace: selected.idRace});
     }
 
     addMonsterToDB() {
       const self = this;
       self.setState({insertingToDB: true, insertSuccess: false});
+
+      // this.state.race.map((race, index) => {
+      //   if (this.state.monsterInputRace == race.name)
+      //     self.setState({monsterInputIDRace: race._id.toString()});
+      //   }
+      // )
+      //
+      // this.props.species.map((species, index) => {
+      //   if (this.state.raceInputSpecies == species.name)
+      //     self.setState({monsterInputIDSpecies: species._id.toString()});
+      //   }
+      // )
+
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {
           try {
             const result = yield client.db("WarhammerQuest").collection('Monsters').insertOne({
               "name": self.state.monsterInputName,
               "species": self.state.monsterInputSpecies,
-              "race": self.state.monsterInputRace
+              "race": self.state.monsterInputRace,
+              "idSpecies": self.state.monsterInputIDSpecies,
+              "idRace": self.state.monsterInputIDRace
             });
 
             console.log(result.ops[0]);
             const monster = result.ops[0];
+            monster.idMonster = monster._id.toString();
             self.props.addMonster(monster);
+
+console.log(monster);
 
             self.setState({
               insertingToDB: false,
@@ -177,6 +197,8 @@ export default class CreateMonster extends React.Component {
               monsterInputName: '',
               monsterInputSpecies: '',
               monsterInputRace: '',
+              monsterInputIDSpecies: '',
+              monsterInputIDRace: '',
               monster: monster,
               selectedSpecies: false,
               selectedRace: false

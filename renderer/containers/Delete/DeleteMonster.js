@@ -5,7 +5,7 @@ import co from 'co';
 const MongoClient = require('mongodb').MongoClient;
 const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true"
 
-export default class CreateMonster extends React.Component {
+export default class DeleteMonster extends React.Component {
   constructor(props) {
     super(props);
 

@@ -50,6 +50,7 @@ export default class Content extends React.Component {
             species={this.props.species}
             races={this.props.races}
             editMonster={(monster) => this.props.editMonster(monster)}
+            deleteMonster={(monster) => this.props.deleteMonster(monster)}
           />
           : ''
       }
@@ -59,6 +60,7 @@ export default class Content extends React.Component {
           species={this.props.species}
           races={this.props.races}
           editRace={(race) => this.props.editRace(race)}
+          deleteRace={(race) => this.props.deleteRace(race)}
         />
         : ''
       }
@@ -67,6 +69,7 @@ export default class Content extends React.Component {
           // monsters={this.props.monsters}
           species={this.props.species}
           races={this.props.races}
+          aSpecies={this.props.aSpecies}
           editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
           deleteSpecies={(aSpecies) => this.props.deleteSpecies(aSpecies)}
         />

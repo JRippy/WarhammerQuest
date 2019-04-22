@@ -12,6 +12,7 @@ export default class CreateRace extends React.Component {
     this.state = {
       raceInputName: '',
       raceInputSpecies: '',
+      raceInputIDSpecies: '',
       insertingToDB: false,
       insertSuccess: false,
       race: null,
@@ -101,22 +102,41 @@ export default class CreateRace extends React.Component {
 
     onChangeSpecies(selected) {
       console.log(selected);
-      this.setState({selectedSpecies: true, raceInputSpecies: selected.name});
+      this.setState({selectedSpecies: true, raceInputSpecies: selected.name,  raceInputIDSpecies: selected._id.toString()});
     }
+
+
+    //
+    //TODO : Delete SpeciesName
+    //
+
 
     addRaceToDB() {
       const self = this;
       self.setState({insertingToDB: true, insertSuccess: false});
+
+
+// 
+// this.props.species.map((species, index) => {
+//   if (this.state.raceInputSpecies == species.name)
+//     self.setState({raceInputIDSpecies: species._id.toString()});
+//   }
+// )
+
+
+
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {
           try {
             const result = yield client.db("WarhammerQuest").collection('Race').insertOne({
               "name": self.state.raceInputName,
               "species": self.state.raceInputSpecies,
+              "idSpecies": self.state.raceInputIDSpecies,
             });
 
             console.log(result.ops[0]);
             const race = result.ops[0];
+            race.idRace = race._id.toString();
             self.props.addRace(race);
 
             self.setState({
@@ -124,6 +144,7 @@ export default class CreateRace extends React.Component {
               insertSuccess: true,
               raceInputName: '',
               raceInputSpecies: '',
+              raceInputIDSpecies: '',
               race: race,
               selectedSpecies: false
             });

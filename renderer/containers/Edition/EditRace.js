@@ -16,6 +16,7 @@ export default class EditRace extends React.Component {
       species: [],
       raceInputName: this.props.race.name,
       raceInputSpecies: this.props.race.species,
+      raceInputIDSpecies: this.props.race.idSpecies,
       selectedSpecies: false,
       //loadingRace: true
     }
@@ -23,7 +24,7 @@ export default class EditRace extends React.Component {
   }
 
   onChangeSpecies(selected) {
-    this.setState({selectedSpecies: true, raceInputSpecies: selected.name});
+    this.setState({selectedSpecies: true, raceInputSpecies: selected.name, raceInputIDSpecies: selected._id.toString()});
   }
 
   editRaceToDB() {
@@ -38,30 +39,33 @@ export default class EditRace extends React.Component {
             {
                 $set: {
                   name: self.state.raceInputName,
-                  species: self.state.raceInputSpecies},
+                  species: self.state.raceInputSpecies,
+                  idSpecies: self.state.raceInputIDSpecies},
               $currentDate: { lastModified: true }
             }
           );
 
           const race1 = result.result.ok;
 
-          const raceNameEdited = self.state.raceInputName;
-          const raceSpeciesEdited = self.state.raceInputSpecies;
-
           if (race1 == 1) {
             console.log("Race Updated");
 
             var raceEdited = self.state.race;
-            raceEdited.name = raceNameEdited;
-            raceEdited.species = raceSpeciesEdited;
+            raceEdited.name = self.state.raceInputName;
+            raceEdited.species = self.state.raceInputSpecies;
+            raceEdited.idSpecies = self.state.raceInputIDSpecies;
 
             self.setState({
               race: raceEdited,
               updatingToDB: false,
-              updateSuccess: true
+              updateSuccess: true,
+              raceInputName: '',
+              raceInputSpecies: '',
+              raceInputIDSpecies: ''
             });
 
             self.props.editRace(self.state.race);
+
           }
           else {
             console.log("Race Fail Update");

@@ -17,6 +17,8 @@ export default class EditMonster extends React.Component {
       monsterInputName: this.props.monster.name,
       monsterInputSpecies: this.props.monster.species,
       monsterInputRace: this.props.monster.race,
+      monsterInputIDSpecies: this.props.monster.idSpecies,
+      monsterInputIDRace: this.props.monster.idRace,
       selectedSpecies: false,
       selectedRace: false,
       loadingRace: true
@@ -24,9 +26,10 @@ export default class EditMonster extends React.Component {
   }
 
     onChangeSpecies(selected) {
-      //console.log("Selected");
+
       this.setState({selectedSpecies: true, loadingRace: true});
       const self = this;
+      
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {
           const collection1 = client.db("WarhammerQuest").collection("Race");
@@ -34,9 +37,10 @@ export default class EditMonster extends React.Component {
           for(let i in docs1) {
             docs1[i].value = docs1[i].name;
             docs1[i].label = docs1[i].name;
+            docs1[i].idRace = docs1[i]._id.toString();
           }
 
-          self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
+          self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name, monsterInputIDSpecies: selected._id.toString()});
 
           client.close();
         })
@@ -44,7 +48,7 @@ export default class EditMonster extends React.Component {
     }
 
     onChangeRace(selected) {
-      this.setState({selectedRace: true, monsterInputRace: selected.name});
+      this.setState({selectedRace: true, monsterInputRace: selected.name, monsterInputIDRace: selected._id.toString()});
     }
 
     editMonsterToDB() {
@@ -61,30 +65,33 @@ export default class EditMonster extends React.Component {
                   $set: {
                     name: self.state.monsterInputName,
                     species: self.state.monsterInputSpecies,
-                    race:  self.state.monsterInputRace},
+                    race:  self.state.monsterInputRace,
+                    idSpecies: self.state.monsterInputIDSpecies,
+                    idRace: self.state.monsterInputIDRace},
                 $currentDate: { lastModified: true }
               }
           );
 
             const monster1 = result.result.ok;
-            const monsterNameEdited = self.state.monsterInputName;
-            const monsterSpeciesEdited = self.state.monsterInputSpecies;
-            const monsterRaceEdited = self.state.monsterInputRace;
 
             if (monster1 == 1) {
               console.log("Monster Updated");
 
               var monsterEdited = self.state.monster;
-              monsterEdited.name = monsterNameEdited;
-              monsterEdited.species = monsterSpeciesEdited;
-              monsterEdited.race = monsterRaceEdited;
+              monsterEdited.name = self.state.monsterInputName;
+              monsterEdited.species = self.state.monsterInputSpecies;
+              monsterEdited.race = self.state.monsterInputRace;
+              monsterEdited.idSpecies = self.state.monsterInputIDSpecies;
+              monsterEdited.idRace = self.state.monsterInputIDRace;
 
               self.setState({
                 updatingToDB: false,
                 updateSuccess: true,
-                monsterInputName: monsterNameEdited,
-                monsterInputSpecies: monsterSpeciesEdited,
-                monsterInputRace: monsterRaceEdited,
+                monsterInputName: '',
+                monsterInputSpecies: '',
+                monsterInputRace: '',
+                monsterInputIDSpecies: '',
+                monsterInputIDRace: '',
                 monster: monsterEdited,
 
                 selectedSpecies: false,

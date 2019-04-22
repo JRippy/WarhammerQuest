@@ -18,7 +18,10 @@ export default class Main extends React.Component {
       monsters: [],
       editMonster: {},
       editRace: {},
-      editSpecies: {}
+      editSpecies: {},
+      deleteMonster: {},
+      deleteRace: {},
+      deleteSpecies: {}
     }
   }
 
@@ -155,6 +158,7 @@ export default class Main extends React.Component {
           for(let i in docs1) {
             docs1[i].value = docs1[i].name;
             docs1[i].label = docs1[i].name;
+            docs1[i].idSpecies = docs1[i]._id.toString();
           }
           console.log(docs1);
           self.setState({species: docs1});
@@ -201,45 +205,132 @@ export default class Main extends React.Component {
 
 
       deleteMonster(monster) {
-        console.log(monster);
-        this.setState({activeTab: 0, deleteMonster: monster});
-      }
+          console.log("Delete Monster");
+
+          const self = this;
+          self.setState({deletingToDB: true, deleteSuccess: false, deleteMonster : monster});
+
+          MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+            co(function*() {
+              try {
+                const result = yield client.db("WarhammerQuest").collection('Monsters').deleteOne({
+                  "name": self.state.deleteMonster.name
+                });
+
+                console.log(result);
+                const monsterNb = result.deletedCount;
+
+                if (parseInt(monsterNb,10) >= 1) {
+                  console.log(monsterNb + " Monster Delete");
+
+                  var monsters = self.state.monsters;
+  console.log(self.state.monsters);
+                  monsters = monsters.filter((j) => self.state.deleteMonster !== j);
+  console.log(monsters);
+
+                  self.setState({
+                    deletingToDB: false,
+                    deleteSuccess: true,
+                    deleteMonster: {},
+                    monsters: monsters
+                  });
+
+                }
+                else {
+                  console.log("Monster Fail Delete");
+                }
+
+              } catch (e) {
+                console.log(e);
+              }
+              client.close();
+            })
+          });
+        }
 
       deleteRace(r) {
-        this.setState({activeTab: 1, deleteRace: r});
-      }
-
-      deleteSpecies(s) {
-        console.log("Delete Species");
-        console.log(this.state);
-        console.log(this.state.speciestoDelete);
+        console.log("Delete Race");
+        console.log(r);
 
         const self = this;
-        self.setState({deletingToDB: true, deleteSuccess: false});
+        self.setState({deletingToDB: true, deleteSuccess: false, deleteRace : r});
 
-//         MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-//           co(function*() {
-//             try {
-//               const result = yield client.db("WarhammerQuest").collection('Species').deleteOne({
-//                 "name": self.state.speciestoDelete
-//               });
-//
-//               console.log(result.ops[0]);
-//               const species = result.ops[0];
-// console.log(result);
-//               self.props.deleteSpecies(species);
-//
-//               self.setState({
-//                 deletingToDB: false,
-//                 deleteSuccess: true,
-//                 speciesInputName: '',
-//                 species: species
-//               });
-//             } catch (e) {
-//               console.log(e);
-//             }
-//             client.close();
-//           })
-//         });
+        MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+          co(function*() {
+            try {
+              const result = yield client.db("WarhammerQuest").collection('Race').deleteOne({
+                "name": self.state.deleteRace.name
+              });
+
+              console.log(result);
+              const raceNb = result.deletedCount;
+
+              if (parseInt(raceNb,10) >= 1) {
+                console.log(raceNb + " Race Delete");
+
+                var races = self.state.races;
+console.log(self.state.races);
+                races = races.filter((j) => self.state.deleteRace !== j);
+console.log(races);
+
+                self.setState({
+                  deletingToDB: false,
+                  deleteSuccess: true,
+                  deleteRace: {},
+                  races: races
+                });
+
+              }
+              else {
+                console.log("Race Fail Delete");
+              }
+
+            } catch (e) {
+              console.log(e);
+            }
+            client.close();
+          })
+        });
+      }
+
+      deleteSpecies(species) {
+        console.log("Delete Species");
+
+        const self = this;
+        self.setState({deletingToDB: true, deleteSuccess: false, deleteSpecies : species});
+
+        MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+          co(function*() {
+            try {
+              const result = yield client.db("WarhammerQuest").collection('Species').deleteOne({
+                "name": self.state.deleteSpecies.name
+              });
+
+              const speciesNb = result.deletedCount;
+
+              if (parseInt(speciesNb,10) >= 1) {
+                console.log(speciesNb + " Species Delete");
+
+                var species = self.state.species;
+                species = species.filter((j) => self.state.deleteSpecies !== j);
+
+                self.setState({
+                  deletingToDB: false,
+                  deleteSuccess: true,
+                  deleteSpecies: {},
+                  species: species
+                });
+
+              }
+              else {
+                console.log("Species Fail Delete");
+              }
+
+            } catch (e) {
+              console.log(e);
+            }
+            client.close();
+          })
+        });
       }
 }

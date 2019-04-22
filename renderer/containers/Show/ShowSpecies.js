@@ -12,9 +12,6 @@ export default class ShowRaces extends React.Component {
 console.log(this.props);
 
       this.state = {
-        // monsterInputName: '',
-        // monsterInputSpecies: '',
-        // monsterInputRace: '',
         species: null
       }
     }
@@ -48,7 +45,7 @@ console.log(this.props);
                       Edit species
                     </button>
                     <button className='delete-button'
-                            onClick={(specie) => { if (window.confirm('Are you sure you wish to delete this species?')) this.props.deleteSpecies(specie) } }>
+                            onClick={() => { if (window.confirm('Are you sure you wish to delete this species?')) this.props.deleteSpecies(specie) } }>
                       Delete species
                     </button>
                   </div>

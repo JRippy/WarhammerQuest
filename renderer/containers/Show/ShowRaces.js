@@ -9,16 +9,23 @@ export default class ShowRaces extends React.Component {
     constructor(props) {
       super(props);
 
-      console.log(this.props);
+console.log(this.props);
 
       this.state = {
         monsterInputSpecies: '',
         monsterInputRace: '',
         racesData: this.props.races,
         race: null,
-        races: [],
+        racesDisplay: []
       }
+
     }
+
+componentDidMount(){
+
+      this.displayListRace();
+
+}
 
   componentWillReceiveProps(nextProps) {
 
@@ -28,12 +35,50 @@ export default class ShowRaces extends React.Component {
 
     const { refresh, id } = this.props;
     if (nextProps.refresh !== refresh) {
-      this.fetchShoes(id)
-        .then(this.refreshShoeList)
+      this.displayListRace();
     }
+
+  }
+
+//TODO finish
+  displayListRace(){
+
+    var displayList = [];
+
+    this.props.races.map((race, indexR) => (
+        this.props.species.map((species, indexS) => {
+          if (race.idSpecies == species._id.toString()) {
+
+            const raceTmp = {name : race.name, species : species.name};
+            displayList = displayList.concat(raceTmp);
+
+          }
+
+        }
+      )
+    ));
+
+    this.setState({
+      racesDisplay : [1,2,3]
+    });
+
+    this.setState({
+      racesDisplay : displayList
+    });
+
+    this.setState({
+      racesDisplay : [this.state.racesDisplay, displayList]
+    });
+    // this.setState({
+    //   racesDisplay : racesDisplay.concat(displayList)
+    // });
+
+    console.log(displayList);
+    console.log(this.state);
   }
 
   render() {
+
     return (
       <div>
         <div className="container">
@@ -58,8 +103,9 @@ export default class ShowRaces extends React.Component {
                       <button onClick={() => {this.props.editRace(race)}}>
                         Edit race
                       </button>
-                      <button onClick={() => alert('Delete in progress')}>
-                        Delete race....
+                      <button className='delete-button'
+                              onClick={() => { if (window.confirm('Are you sure you wish to delete this race?')) this.props.deleteRace(race) } }>
+                        Delete race
                       </button>
                     </div>
                   </div>

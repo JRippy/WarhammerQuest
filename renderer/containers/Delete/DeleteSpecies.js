@@ -5,11 +5,11 @@ import co from 'co';
 const MongoClient = require('mongodb').MongoClient;
 const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-qkwxp.mongodb.net/test?retryWrites=true"
 
-export default class CreateMonster extends React.Component {
+export default class DeleteMonster extends React.Component {
   constructor(props) {
     super(props);
 
-console.log("DeleteSpecies");
+console.log("Page DeleteSpecies");
 console.log(this.props);
 
     this.state = {
@@ -18,6 +18,12 @@ console.log(this.props);
       deleteSuccess: false,
       species: null,
     }
+  }
+
+  componentDidMount(){
+
+    deleteSpeciesToDB();
+
   }
 
   // render() {
@@ -79,30 +85,31 @@ console.log(this.props);
       deleteSpeciesToDB() {
         const self = this;
         self.setState({deletingToDB: true, deleteSuccess: false});
+        deleteSpeciesTest();
 
-        MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-          co(function*() {
-            try {
-              const result = yield client.db("WarhammerQuest").collection('Species').deleteOne({
-                "name": self.state.speciestoDelete
-              });
-
-              console.log(result.ops[0]);
-              const species = result.ops[0];
-console.log(result);
-              self.props.deleteSpecies(species);
-
-              self.setState({
-                deletingToDB: false,
-                deleteSuccess: true,
-                speciesInputName: '',
-                species: species
-              });
-            } catch (e) {
-              console.log(e);
-            }
-            client.close();
-          })
-        });
+//         MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+//           co(function*() {
+//             try {
+//               const result = yield client.db("WarhammerQuest").collection('Species').deleteOne({
+//                 "name": self.state.speciestoDelete
+//               });
+//
+//               console.log(result.ops[0]);
+//               const species = result.ops[0];
+// console.log(result);
+//               self.props.deleteSpecies(species);
+//
+//               self.setState({
+//                 deletingToDB: false,
+//                 deleteSuccess: true,
+//                 speciesInputName: '',
+//                 species: species
+//               });
+//             } catch (e) {
+//               console.log(e);
+//             }
+//             client.close();
+//           })
+//         });
       }
     }

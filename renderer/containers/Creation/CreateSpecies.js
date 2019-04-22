@@ -83,6 +83,7 @@ export default class CreateMonster extends React.Component {
               const species = result.ops[0];
               species.label = species.name;
               species.value = species.name;
+              species.idSpecies = species._id.toString();
               self.props.addSpecies(species);
 
               self.setState({
