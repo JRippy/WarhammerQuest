@@ -8,38 +8,155 @@ const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-q
 export default class EditMonster extends React.Component {
   constructor(props) {
     super(props);
-
+//
+// console.log(this);
+// console.log(this.props);
     this.state = {
       updatingToDB: false,
       updateSuccess: false,
       species: this.props.aSpecies,
+      monsters: this.props.monsters,
+      races: this.props.races,
       speciesInputName: this.props.aSpecies.name,
       speciesInputIDName: this.props.aSpecies.idSpecies,
       selectedSpecies: false,
       loadingRace: true,
     }
   }
-      //
-      // onChangeSpecies(selected) {
-      //   //console.log("Selected");
-      //   this.setState({selectedSpecies: true, loadingRace: true});
-      //   const self = this;
-      //   MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
-      //     co(function*() {
-      //       const collection1 = client.db("WarhammerQuest").collection("Race");
-      //       var docs1 = yield collection1.find({species: selected.name}).toArray();
-      //       for(let i in docs1) {
-      //         docs1[i].value = docs1[i].name;
-      //         docs1[i].label = docs1[i].name;
-      //       }
-      //       console.log("Docs1");
-      //       console.log(docs1);
-      //       self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name});
-      //
-      //       client.close();
-      //     })
-      //   });
-      // }
+
+  refreshListMonstersAndSpecies(){
+
+    var displayList = [];
+    var monstersTmp = {};
+
+    this.state.monsters.map((monster, indexM) => {
+        if (monster.idSpecies == this.state.species._id.toString()) {
+
+          monstersTmp = {
+            _id : monster._id,
+            name : monster.name,
+            species : this.state.species.name,
+            idSpecies : this.state.species._id.toString(),
+            race : monster.race,
+            idRace : monster.idRace};
+
+          displayList = displayList.concat(monstersTmp);
+
+          //UpdateDataBase
+          const self = this;
+          MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+            co(function*() {
+              try {
+
+                const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
+                  { name: monster.name },
+                  {
+                      $set: {
+                        name: monster.name,
+                        species : self.state.species.name,
+                        idSpecies : self.state.species._id.toString(),
+                        race : monster.race,
+                        idRace : monster.idRace},
+                    $currentDate: { lastModified: true }
+                  }
+                );
+
+                const monster1 = result.result.ok;
+
+                if (monster1 == 1) {
+                  console.log(monster.name + " Monster Updated");
+                }
+                else {
+                  console.log(monster.name + " Monster Fail Update");
+                }
+
+              } catch (e) {
+                console.log(e);
+              }
+              client.close();
+            })
+          });
+
+        }
+        else {
+
+
+              monstersTmp = monster;
+
+              displayList = displayList.concat(monstersTmp);
+
+
+        }
+    });
+
+//Update Races
+    var displayListR = [];
+    var raceTmp = {};
+
+    this.state.races.map((race, indexM) => {
+        if (race.idSpecies == this.state.species._id.toString()) {
+
+          raceTmp = {
+            _id : race._id,
+            name : race.name,
+            species : this.state.species.name,
+            idSpecies : this.state.species._id.toString()};
+
+          displayListR = displayListR.concat(raceTmp);
+
+          //UpdateDataBase
+          const self = this;
+          MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+            co(function*() {
+              try {
+
+                const result = yield client.db("WarhammerQuest").collection('Race').updateOne(
+                  { name: race.name },
+                  {
+                      $set: {
+                        name: race.name,
+                        species : self.state.species.name,
+                        idSpecies : self.state.species._id.toString()},
+                    $currentDate: { lastModified: true }
+                  }
+                );
+
+                const race1 = result.result.ok;
+
+                if (race1 == 1) {
+                  console.log(race.name + " Race Updated");
+                }
+                else {
+                  console.log(race.name + " Race Fail Update");
+                }
+
+              } catch (e) {
+                console.log(e);
+              }
+              client.close();
+            })
+          });
+
+        }
+        else {
+
+          displayListR = displayListR.concat(race);
+
+        }
+    });
+
+
+
+
+    this.props.updateMonsters(displayList);
+    this.props.updateRaces(displayListR);
+
+    this.setState({
+      monsters : displayList,
+      races : displayListR
+    });
+    //return displayList;
+  }
 
   editSpeciesToDB() {
     const self = this;
@@ -74,6 +191,8 @@ export default class EditMonster extends React.Component {
             });
 
             self.props.editSpecies(self.state.species);
+
+            self.refreshListMonstersAndSpecies();
           }
           else {
             console.log("Species Fail Update");

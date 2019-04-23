@@ -9,8 +9,6 @@ export default class ShowRaces extends React.Component {
     constructor(props) {
       super(props);
 
-console.log(this.props);
-
       this.state = {
         monsterInputSpecies: '',
         monsterInputRace: '',
@@ -26,14 +24,16 @@ componentDidMount(){
       this.setState({
         racesDisplay: this.displayListRace()
       });
+      // console.log("state");
+      // console.log(this.state.racesDisplay);
 
 }
 
   componentWillReceiveProps(nextProps) {
 
     console.log("ComponentReceive");
-    console.log(this.props);
-    console.log(nextProps);
+    // console.log(this.props);
+    // console.log(nextProps);
 
     const { refresh, id } = this.props;
     if (nextProps.refresh !== refresh) {
@@ -45,14 +45,17 @@ componentDidMount(){
 //TODO finish
   displayListRace(){
 
-    var displayList = this.state.racesDisplay;
+    var displayList = this.state.racesDisplay.slice();
     var raceTmp = {};
 
     this.props.races.map((race, indexR) => (
         this.props.species.map((species, indexS) => {
           if (race.idSpecies == species._id.toString()) {
 
-            raceTmp = {name : race.name, species : species.name, idSpecies : species._id.toString()};
+            raceTmp = {
+              name : race.name,
+              species : species.name,
+              idSpecies : species._id.toString()};
             displayList = displayList.concat(raceTmp);
 
           }
@@ -61,11 +64,11 @@ componentDidMount(){
       )
     ));
 
-    this.setState({
-      monsterInputSpecies: 'Coucou',
-      monsterInputRace: 'Coucou',
-      racesDisplay : displayList
-    });
+    //this.setState({
+    //  monsterInputSpecies: 'Coucou',
+    //  monsterInputRace: 'Coucou',
+    //  racesDisplay : displayList
+    //});
 
     // this.setState({
     //   racesDisplay : [this.state.racesDisplay, displayList]

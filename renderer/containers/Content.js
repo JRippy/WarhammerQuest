@@ -16,7 +16,7 @@ import CreateSpecies from '../containers/Creation/CreateSpecies';
 import EditMonster from '../containers/Edition/EditMonster';
 import EditRace from '../containers/Edition/EditRace';
 import EditSpecies from '../containers/Edition/EditSpecies';
-// 
+//
 // import DeleteMonster from '../containers/Delete/DeleteMonster';
 // import DeleteRace from '../containers/Delete/DeleteRace';
 // import DeleteSpecies from '../containers/Delete/DeleteSpecies';
@@ -56,9 +56,10 @@ export default class Content extends React.Component {
       }
       {this.props.activeTab == 1 ?
         <ShowRaces
-          //monsters={this.props.monsters}
+          monsters={this.props.monsters}
           species={this.props.species}
           races={this.props.races}
+          updateMonsters={(monster) => this.props.updateMonsters(monster)}
           editRace={(race) => this.props.editRace(race)}
           deleteRace={(race) => this.props.deleteRace(race)}
         />
@@ -66,10 +67,12 @@ export default class Content extends React.Component {
       }
       {this.props.activeTab == 2 ?
         <ShowSpecies
-          // monsters={this.props.monsters}
-          species={this.props.species}
+          monsters={this.props.monsters}
           races={this.props.races}
+          species={this.props.species}
           aSpecies={this.props.aSpecies}
+          updateMonsters={(monster) => this.props.updateMonsters(monster)}
+          updateRaces={(race) => this.props.updateRaces(race)}
           editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
           deleteSpecies={(aSpecies) => this.props.deleteSpecies(aSpecies)}
         />
@@ -107,17 +110,26 @@ export default class Content extends React.Component {
       }
       {this.props.activeTab == 7 ?
         <EditRace
+          monsters={this.props.monsters}
           race={this.props.race}
           races={this.props.races}
           species={this.props.species}
+          editMonster={(monster) => this.props.editMonster(monster)}
           editRace={(race) => this.props.editRace(race)}
+          updateMonsters={(monster) => this.props.updateMonsters(monster)}
         />
         : ''
       }
       {this.props.activeTab == 8 ?
         <EditSpecies
           aSpecies={this.props.aSpecies}
+          monsters={this.props.monsters}
+          races={this.props.races}
+          editMonster={(monster) => this.props.editMonster(monster)}
+          editRace={(race) => this.props.editRace(race)}
           editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
+          updateMonsters={(monster) => this.props.updateMonsters(monster)}
+          updateRaces={(race) => this.props.updateRaces(race)}                    
         />
         : ''
       }

@@ -31,19 +31,6 @@ export default class Main extends React.Component {
     this.loadRace();
   }
 
-//   componentWillReceiveProps(props) {
-//
-//   const { refresh, id } = this.props;
-//   //const refresh = this.props.refresh;
-//   //const id = this.props.id;
-//
-//   if (props.refresh !== refresh) {
-//     this.loadMonsters();
-//     this.loadSpecies();
-//     this.loadRace();
-//   }
-// }
-
   render() {
     return (
       <div id="main">
@@ -76,6 +63,8 @@ export default class Main extends React.Component {
             deleteMonster={(monster) => this.deleteMonster(monster)}
             deleteRace={(race) => this.deleteRace(race)}
             deleteSpecies={(species) => this.deleteSpecies(species)}
+            updateMonsters={(monster) => this.updateMonsters(monster)}
+            updateRaces={(race) => this.updateRaces(race)}
           />
         </div>
 
@@ -203,6 +192,13 @@ export default class Main extends React.Component {
         //this.setState({editSpecies: s});
       }
 
+      updateMonsters(monsters) {
+        this.setState({monsters: monsters});
+      }
+
+      updateRaces(r) {
+        this.setState({races: r});
+      }
 
       deleteMonster(monster) {
           console.log("Delete Monster");
