@@ -24,16 +24,11 @@ componentDidMount(){
       this.setState({
         racesDisplay: this.displayListRace()
       });
-      // console.log("state");
-      // console.log(this.state.racesDisplay);
-
 }
 
   componentWillReceiveProps(nextProps) {
 
     console.log("ComponentReceive");
-    // console.log(this.props);
-    // console.log(nextProps);
 
     const { refresh, id } = this.props;
     if (nextProps.refresh !== refresh) {
@@ -42,7 +37,6 @@ componentDidMount(){
 
   }
 
-//TODO finish
   displayListRace(){
 
     var displayList = this.state.racesDisplay.slice();
@@ -64,22 +58,6 @@ componentDidMount(){
       )
     ));
 
-    //this.setState({
-    //  monsterInputSpecies: 'Coucou',
-    //  monsterInputRace: 'Coucou',
-    //  racesDisplay : displayList
-    //});
-
-    // this.setState({
-    //   racesDisplay : [this.state.racesDisplay, displayList]
-    // });
-
-    // this.setState({
-    //   racesDisplay : this.state.racesDisplay.concat(displayList)
-    // });
-
-    console.log(displayList);
-    console.log(this.state);
     return displayList;
   }
 

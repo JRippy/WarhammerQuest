@@ -144,7 +144,7 @@ export default class CreateMonster extends React.Component {
             docs1[i].label = docs1[i].name;
             docs1[i].idRace = docs1[i]._id.toString();
           }
-          
+
           console.log(docs1);
           self.setState({race: docs1, loadingRace: false, monsterInputSpecies: selected.name, monsterInputIDSpecies: selected._id.toString()});
 
@@ -188,8 +188,6 @@ export default class CreateMonster extends React.Component {
             const monster = result.ops[0];
             monster.idMonster = monster._id.toString();
             self.props.addMonster(monster);
-
-console.log(monster);
 
             self.setState({
               insertingToDB: false,

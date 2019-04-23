@@ -16,17 +16,9 @@ export default class ShowMonsters extends React.Component {
 
     }
 
-  componentDidMount() {
-
-    //displayListMonster();
-
-  }
-
   displayListMonster(){
 
     var displayList = [];
-
-    console.log(this.props);
 
     this.props.monsters.map((monster, indexM) => (
       this.props.races.map((race, indexR) => (
@@ -42,8 +34,6 @@ export default class ShowMonsters extends React.Component {
         )
       ))
     ));
-
-
   }
 
   render() {

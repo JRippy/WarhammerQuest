@@ -101,29 +101,12 @@ export default class CreateRace extends React.Component {
     }
 
     onChangeSpecies(selected) {
-      console.log(selected);
       this.setState({selectedSpecies: true, raceInputSpecies: selected.name,  raceInputIDSpecies: selected._id.toString()});
     }
-
-
-    //
-    //TODO : Delete SpeciesName
-    //
-
 
     addRaceToDB() {
       const self = this;
       self.setState({insertingToDB: true, insertSuccess: false});
-
-
-// 
-// this.props.species.map((species, index) => {
-//   if (this.state.raceInputSpecies == species.name)
-//     self.setState({raceInputIDSpecies: species._id.toString()});
-//   }
-// )
-
-
 
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {

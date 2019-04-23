@@ -25,10 +25,6 @@ export default class Content extends React.Component {
   constructor(props) {
     super(props);
 
-
-    console.log(this.state);
-    console.log(this.props);
-
     this.state = {
       monsterInputName: '',
       monsterInputSpecies: '',
@@ -129,7 +125,7 @@ export default class Content extends React.Component {
           editRace={(race) => this.props.editRace(race)}
           editSpecies={(aSpecies) => this.props.editSpecies(aSpecies)}
           updateMonsters={(monster) => this.props.updateMonsters(monster)}
-          updateRaces={(race) => this.props.updateRaces(race)}                    
+          updateRaces={(race) => this.props.updateRaces(race)}
         />
         : ''
       }

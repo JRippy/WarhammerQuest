@@ -9,8 +9,6 @@ export default class EditRace extends React.Component {
   constructor(props) {
     super(props);
 
-console.log(this.props);
-
     this.state = {
       updatingToDB: false,
       updateSuccess: false,
@@ -33,7 +31,6 @@ console.log(this.props);
 
   refreshListMonsters(){
 
-    //var displayList = this.state.monsters;
     var displayList = [];
     var monstersTmp = {};
 

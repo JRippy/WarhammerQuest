@@ -29,7 +29,7 @@ export default class EditMonster extends React.Component {
 
       this.setState({selectedSpecies: true, loadingRace: true});
       const self = this;
-      
+
       MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
         co(function*() {
           const collection1 = client.db("WarhammerQuest").collection("Race");
@@ -192,8 +192,6 @@ export default class EditMonster extends React.Component {
                         <h6>Name : {this.state.monsterInputName}</h6>
                         <h6 className="text-muted">Species: {this.state.monsterInputSpecies}</h6>
                         <h6 className="text-muted">Race: {this.state.monsterInputRace}</h6>
-                        <h6>{console.log(this.state)}</h6>
-                        <h6>{console.log(this.props)}</h6>
                       </div>
                       :''
                       // <div>

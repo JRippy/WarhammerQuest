@@ -8,9 +8,7 @@ const URI = "mongodb+srv://warhammerquestClient:awesomepassword@warhammerquest-q
 export default class EditMonster extends React.Component {
   constructor(props) {
     super(props);
-//
-// console.log(this);
-// console.log(this.props);
+
     this.state = {
       updatingToDB: false,
       updateSuccess: false,
@@ -144,9 +142,6 @@ export default class EditMonster extends React.Component {
 
         }
     });
-
-
-
 
     this.props.updateMonsters(displayList);
     this.props.updateRaces(displayListR);

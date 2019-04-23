@@ -158,7 +158,6 @@ export default class Main extends React.Component {
     }
 
       addMonster(monster) {
-        console.log(1);
         var monsters = this.state.monsters;
         monsters.push(monster);
         this.setState({monsters: monsters});
@@ -177,7 +176,6 @@ export default class Main extends React.Component {
       }
 
       editMonster(monster) {
-        console.log(monster);
         this.setState({activeTab: 6, editMonster: monster});
       }
 
@@ -187,9 +185,6 @@ export default class Main extends React.Component {
 
       editSpecies(s) {
         this.setState({activeTab: 8, editSpecies: s});
-        //var species = this.state.species;
-        //species.push(s);
-        //this.setState({editSpecies: s});
       }
 
       updateMonsters(monsters) {
@@ -213,16 +208,13 @@ export default class Main extends React.Component {
                   "name": self.state.deleteMonster.name
                 });
 
-                console.log(result);
                 const monsterNb = result.deletedCount;
 
                 if (parseInt(monsterNb,10) >= 1) {
                   console.log(monsterNb + " Monster Delete");
 
                   var monsters = self.state.monsters;
-  console.log(self.state.monsters);
                   monsters = monsters.filter((j) => self.state.deleteMonster !== j);
-  console.log(monsters);
 
                   self.setState({
                     deletingToDB: false,
@@ -245,8 +237,6 @@ export default class Main extends React.Component {
         }
 
       deleteRace(r) {
-        console.log("Delete Race");
-        console.log(r);
 
         const self = this;
         self.setState({deletingToDB: true, deleteSuccess: false, deleteRace : r});
@@ -258,16 +248,14 @@ export default class Main extends React.Component {
                 "name": self.state.deleteRace.name
               });
 
-              console.log(result);
               const raceNb = result.deletedCount;
 
               if (parseInt(raceNb,10) >= 1) {
                 console.log(raceNb + " Race Delete");
 
                 var races = self.state.races;
-console.log(self.state.races);
+
                 races = races.filter((j) => self.state.deleteRace !== j);
-console.log(races);
 
                 self.setState({
                   deletingToDB: false,
@@ -287,10 +275,74 @@ console.log(races);
             client.close();
           })
         });
+
+        //Monster
+        var displayList = [];
+        var monstersTmp = {};
+
+        this.state.monsters.map((monster, indexM) => {
+            if (monster.idRace == r._id.toString()) {
+
+              monstersTmp = {
+                _id : monster._id,
+                name : monster.name,
+                species : '',
+                idSpecies : '',
+                race : '',
+                idRace : ''};
+
+              displayList = displayList.concat(monstersTmp);
+
+              //UpdateDataBase
+              const self = this;
+              MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+                co(function*() {
+                  try {
+
+                    const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
+                      { name: monster.name },
+                      {
+                          $set: {
+                            name: monster.name,
+                            species : '',
+                            idSpecies : '',
+                            race : '',
+                            idRace : ''},
+                        $currentDate: { lastModified: true }
+                      }
+                    );
+
+                    const monster1 = result.result.ok;
+
+                    if (monster1 == 1) {
+                      console.log(monster.name + " Monster Updated");
+                    }
+                    else {
+                      console.log(monster.name + " Monster Fail Update");
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                  client.close();
+                })
+              });
+
+            }
+            else {
+
+              displayList = displayList.concat(monster);
+            }
+        });
+
+
+        this.setState({
+          monsters : displayList
+        });
+
       }
 
       deleteSpecies(species) {
-        console.log("Delete Species");
 
         const self = this;
         self.setState({deletingToDB: true, deleteSuccess: false, deleteSpecies : species});
@@ -327,6 +379,128 @@ console.log(races);
             }
             client.close();
           })
+        });
+
+
+        //Race-----------------------------------------------------------------------------------
+        var displayListR = [];
+        var raceTmp = {};
+
+        this.state.races.map((race, indexM) => {
+            if (race.idSpecies == species._id.toString()) {
+
+              raceTmp = {
+                _id : race._id,
+                name : race.name,
+                species : '',
+                idSpecies : ''};
+
+              displayListR = displayListR.concat(raceTmp);
+
+              const self = this;
+              MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+                co(function*() {
+                  try {
+
+                    const result = yield client.db("WarhammerQuest").collection('Race').updateOne(
+                      { name: race.name },
+                      {
+                          $set: {
+                            name: race.name,
+                            species : '',
+                            idSpecies : ''},
+                        $currentDate: { lastModified: true }
+                      }
+                    );
+
+                    const race1 = result.result.ok;
+
+                    if (race1 == 1) {
+                      console.log(race.name + " Race Updated");
+                    }
+                    else {
+                      console.log(race.name + " Race Fail Update");
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                  client.close();
+                })
+              });
+
+            }
+            else {
+
+              displayListR = displayListR.concat(race);
+
+            }
+        });
+
+        //Monster
+
+        var displayList = [];
+        var monstersTmp = {};
+
+        this.state.monsters.map((monster, indexM) => {
+            if (monster.idSpecies == species._id.toString()) {
+
+              monstersTmp = {
+                _id : monster._id,
+                name : monster.name,
+                species : '',
+                idSpecies : '',
+                race : monster.race,
+                idRace : monster.idRace};
+
+              displayList = displayList.concat(monstersTmp);
+
+              //UpdateDataBase
+              const self = this;
+              MongoClient.connect(URI, { useNewUrlParser: true }, function(err, client) {
+                co(function*() {
+                  try {
+
+                    const result = yield client.db("WarhammerQuest").collection('Monsters').updateOne(
+                      { name: monster.name },
+                      {
+                          $set: {
+                            name: monster.name,
+                            species : '',
+                            idSpecies : '',
+                            race : monster.race,
+                            idRace : monster.idRace},
+                        $currentDate: { lastModified: true }
+                      }
+                    );
+
+                    const monster1 = result.result.ok;
+
+                    if (monster1 == 1) {
+                      console.log(monster.name + " Monster Updated");
+                    }
+                    else {
+                      console.log(monster.name + " Monster Fail Update");
+                    }
+
+                  } catch (e) {
+                    console.log(e);
+                  }
+                  client.close();
+                })
+              });
+
+            }
+            else {
+
+              displayList = displayList.concat(monster);
+            }
+        });
+
+
+        this.setState({
+          monsters : displayList,
+          races : displayListR
         });
       }
 }
