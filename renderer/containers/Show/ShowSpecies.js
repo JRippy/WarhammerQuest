@@ -39,6 +39,7 @@ export default class ShowRaces extends React.Component {
                 <div className="card">
                   <div className="card-body">
                     <h4 className="text-title">{specie.name}</h4>
+                    <h6 className="text-muted">Atk: {specie.Atk} || Def: {specie.Def}</h6>
                     <button onClick={() => {this.props.editSpecies(specie)}}>
                       Edit species
                     </button>

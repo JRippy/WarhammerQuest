@@ -11,10 +11,26 @@ export default class CreateMonster extends React.Component {
 
     this.state = {
       speciesInputName: '',
+      speciesInputAtk: '',
+      speciesInputDef: '',
       insertingToDB: false,
       insertSuccess: false,
       species: null,
     }
+  }
+
+  handleChangeAtk(evt) {
+    const speciesInputAtk = (evt.target.validity.valid) ? evt.target.value : this.state.speciesInputAtk;
+console.log(speciesInputAtk);
+    this.setState({ speciesInputAtk });
+  }
+
+
+  handleChangeDef(evt) {
+    const speciesInputDef = (evt.target.validity.valid) ? evt.target.value : this.state.speciesInputDef;
+console.log(speciesInputDef);
+console.log(evt.target.validity.valid);
+    this.setState({ speciesInputDef });
   }
 
   render() {
@@ -28,7 +44,9 @@ export default class CreateMonster extends React.Component {
               <div className="card-body">
                 <div className="form-group">
                   <label htmlFor="name">Name:</label>
-                  <input type="text" className="form-control" id="name" placeholder="Name" value={this.state.speciesInputName} onChange={(event) => this.setState({speciesInputName: event.target.value})}/>
+                  <input type="text" pattern="[0-9]*" className="form-control" id="name" placeholder="Name" value={this.state.speciesInputName} onChange={(event) => this.setState({speciesInputName: event.target.value})}/>
+                  Atk : <input type="text" pattern="[0-9]*" className="form-control" id="atk" placeholder="Atk" className="stats" onInput={this.handleChangeAtk.bind(this)} value={this.state.speciesInputAtk}/>||
+                  Def : <input type="text" pattern="[0-9]*" className="form-control" id="def" placeholder="Def" className="stats" onInput={this.handleChangeDef.bind(this)} value={this.state.speciesInputDef}/>||
                 </div>
 
                 {this.state.insertingToDB ?
@@ -45,6 +63,7 @@ export default class CreateMonster extends React.Component {
                   <div>
                     <h3><span className="badge badge-success">Species Added</span></h3>
                     <h6>{this.state.species.name}</h6>
+                    <h8>Atk : {this.state.species.Atk} || Def : {this.state.species.Def}</h8>
                   </div>
                   : ''
                 }
@@ -63,6 +82,9 @@ export default class CreateMonster extends React.Component {
             .addMonsterCard {
               margin-top: 150px;
             }
+            .stats {
+              width: 30px;
+            }
             `}</style>
 
           </div>
@@ -76,13 +98,17 @@ export default class CreateMonster extends React.Component {
           co(function*() {
             try {
               const result = yield client.db("WarhammerQuest").collection('Species').insertOne({
-                "name": self.state.speciesInputName
+                "name": self.state.speciesInputName,
+                "Atk": self.state.speciesInputAtk,
+                "Def": self.state.speciesInputDef,
               });
 
               console.log(result.ops[0]);
               const species = result.ops[0];
               species.label = species.name;
               species.value = species.name;
+              species.Atk = species.Atk;
+              species.Def = species.Def;
               species.idSpecies = species._id.toString();
               self.props.addSpecies(species);
 
@@ -90,6 +116,8 @@ export default class CreateMonster extends React.Component {
                 insertingToDB: false,
                 insertSuccess: true,
                 speciesInputName: '',
+                speciesInputAtk: '',
+                speciesInputDef: '',
                 species: species
               });
             } catch (e) {

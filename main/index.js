@@ -44,7 +44,7 @@ app.on('ready', async () => {
   mainWindow.maximize()
 
   // //Show dev tools
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
