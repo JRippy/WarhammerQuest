@@ -29,20 +29,6 @@ export default class CreateMonster extends React.Component {
     }
   }
 
-  handleChangeAtk(evt) {
-    const speciesInputAtk = (evt.target.validity.valid) ? evt.target.value : this.state.speciesInputAtk;
-console.log(speciesInputAtk);
-    this.setState({ speciesInputAtk });
-  }
-
-  handleChangeDef(evt) {
-    const speciesInputDef = (evt.target.validity.valid) ? evt.target.value : this.state.speciesInputDef;
-console.log(speciesInputDef);
-console.log(evt.target.validity.valid);
-    this.setState({ speciesInputDef });
-  }
-
-
     handleChangeM(evt) {
       const speciesInputM = (evt.target.validity.valid) ? evt.target.value : this.state.speciesInputM;
   console.log(speciesInputM);
@@ -127,18 +113,30 @@ console.log(evt.target.validity.valid);
                 <div className="form-group">
                   <label htmlFor="name">Name:</label>
                   <input type="text" pattern="[0-9]*" className="form-control" id="name" placeholder="Name" value={this.state.speciesInputName} onChange={(event) => this.setState({speciesInputName: event.target.value})}/>
-                  M : <input type="text" pattern="[0-9]*" className="form-control" id="m" placeholder="M" className="stats" onInput={this.handleChangeM.bind(this)} value={this.state.speciesInputM}/>
-                  Cc : <input type="text" pattern="[0-9]*" className="form-control" id="cc" placeholder="Cc" className="stats" onInput={this.handleChangeCc.bind(this)} value={this.state.speciesInputCc}/>
-                  CT : <input type="text" pattern="[0-9]*" className="form-control" id="ct" placeholder="CT" className="stats" onInput={this.handleChangeCT.bind(this)} value={this.state.speciesInputCT}/>
-                  F : <input type="text" pattern="[0-9]*" className="form-control" id="f" placeholder="F" className="stats" onInput={this.handleChangeF.bind(this)} value={this.state.speciesInputF}/>
-                  E : <input type="text" pattern="[0-9]*" className="form-control" id="e" placeholder="E" className="stats" onInput={this.handleChangeE.bind(this)} value={this.state.speciesInputE}/>
-                  PV : <input type="text" pattern="[0-9]*" className="form-control" id="pv" placeholder="PV" className="stats" onInput={this.handleChangePV.bind(this)} value={this.state.speciesInputPV}/>
-                  I : <input type="text" pattern="[0-9]*" className="form-control" id="i" placeholder="I" className="stats" onInput={this.handleChangeI.bind(this)} value={this.state.speciesInputI}/>
-                  A : <input type="text" pattern="[0-9]*" className="form-control" id="a" placeholder="A" className="stats" onInput={this.handleChangeA.bind(this)} value={this.state.speciesInputA}/>
-                  CD : <input type="text" pattern="[0-9]*" className="form-control" id="cd" placeholder="CD" className="stats" onInput={this.handleChangeCD.bind(this)} value={this.state.speciesInputCD}/>
-                  INT : <input type="text" pattern="[0-9]*" className="form-control" id="int" placeholder="INT" className="stats" onInput={this.handleChangeINT.bind(this)} value={this.state.speciesInputINT}/>
-                  CL : <input type="text" pattern="[0-9]*" className="form-control" id="cl" placeholder="CL" className="stats" onInput={this.handleChangeCL.bind(this)} value={this.state.speciesInputCL}/>
-                  FM : <input type="text" pattern="[0-9]*" className="form-control" id="fm" placeholder="FM" className="stats" onInput={this.handleChangeFM.bind(this)} value={this.state.speciesInputFM}/>
+                  // M : <input type="text" pattern="[0-9]*" className="form-control" id="m" placeholder="M" className="stats" onInput={this.handleChangeM.bind(this)} value={this.state.speciesInputM}/>
+                  // Cc : <input type="text" pattern="[0-9]*" className="form-control" id="cc" placeholder="Cc" className="stats" onInput={this.handleChangeCc.bind(this)} value={this.state.speciesInputCc}/>
+                  // CT : <input type="text" pattern="[0-9]*" className="form-control" id="ct" placeholder="CT" className="stats" onInput={this.handleChangeCT.bind(this)} value={this.state.speciesInputCT}/>
+                  // F : <input type="text" pattern="[0-9]*" className="form-control" id="f" placeholder="F" className="stats" onInput={this.handleChangeF.bind(this)} value={this.state.speciesInputF}/>
+                  // E : <input type="text" pattern="[0-9]*" className="form-control" id="e" placeholder="E" className="stats" onInput={this.handleChangeE.bind(this)} value={this.state.speciesInputE}/>
+                  // PV : <input type="text" pattern="[0-9]*" className="form-control" id="pv" placeholder="PV" className="stats" onInput={this.handleChangePV.bind(this)} value={this.state.speciesInputPV}/>
+                  // I : <input type="text" pattern="[0-9]*" className="form-control" id="i" placeholder="I" className="stats" onInput={this.handleChangeI.bind(this)} value={this.state.speciesInputI}/>
+                  // A : <input type="text" pattern="[0-9]*" className="form-control" id="a" placeholder="A" className="stats" onInput={this.handleChangeA.bind(this)} value={this.state.speciesInputA}/>
+                  // CD : <input type="text" pattern="[0-9]*" className="form-control" id="cd" placeholder="CD" className="stats" onInput={this.handleChangeCD.bind(this)} value={this.state.speciesInputCD}/>
+                  // INT : <input type="text" pattern="[0-9]*" className="form-control" id="int" placeholder="INT" className="stats" onInput={this.handleChangeINT.bind(this)} value={this.state.speciesInputINT}/>
+                  // CL : <input type="text" pattern="[0-9]*" className="form-control" id="cl" placeholder="CL" className="stats" onInput={this.handleChangeCL.bind(this)} value={this.state.speciesInputCL}/>
+                  // FM : <input type="text" pattern="[0-9]*" className="form-control" id="fm" placeholder="FM" className="stats" onInput={this.handleChangeFM.bind(this)} value={this.state.speciesInputFM}/>
+                  M : <input type="number" pattern="[0-9]*" className="form-control" id="m" placeholder="M" className="stats" onInput={this.handleChangeM.bind(this)} value={this.state.speciesInputM}/>
+                  Cc : <input type="number" pattern="[0-9]*" className="form-control" id="cc" placeholder="Cc" className="stats" onInput={this.handleChangeCc.bind(this)} value={this.state.speciesInputCc}/>
+                  CT : <input type="number" pattern="[0-9]*" className="form-control" id="ct" placeholder="CT" className="stats" onInput={this.handleChangeCT.bind(this)} value={this.state.speciesInputCT}/>
+                  F : <input type="number" pattern="[0-9]*" className="form-control" id="f" placeholder="F" className="stats" onInput={this.handleChangeF.bind(this)} value={this.state.speciesInputF}/>
+                  E : <input type="number" pattern="[0-9]*" className="form-control" id="e" placeholder="E" className="stats" onInput={this.handleChangeE.bind(this)} value={this.state.speciesInputE}/>
+                  PV : <input type="number" pattern="[0-9]*" className="form-control" id="pv" placeholder="PV" className="stats" onInput={this.handleChangePV.bind(this)} value={this.state.speciesInputPV}/>
+                  I : <input type="number" pattern="[0-9]*" className="form-control" id="i" placeholder="I" className="stats" onInput={this.handleChangeI.bind(this)} value={this.state.speciesInputI}/>
+                  A : <input type="number" pattern="[0-9]*" className="form-control" id="a" placeholder="A" className="stats" onInput={this.handleChangeA.bind(this)} value={this.state.speciesInputA}/>
+                  CD : <input type="number" pattern="[0-9]*" className="form-control" id="cd" placeholder="CD" className="stats" onInput={this.handleChangeCD.bind(this)} value={this.state.speciesInputCD}/>
+                  INT : <input type="number" pattern="[0-9]*" className="form-control" id="int" placeholder="INT" className="stats" onInput={this.handleChangeINT.bind(this)} value={this.state.speciesInputINT}/>
+                  CL : <input type="number" pattern="[0-9]*" className="form-control" id="cl" placeholder="CL" className="stats" onInput={this.handleChangeCL.bind(this)} value={this.state.speciesInputCL}/>
+                  FM : <input type="number" pattern="[0-9]*" className="form-control" id="fm" placeholder="FM" className="stats" onInput={this.handleChangeFM.bind(this)} value={this.state.speciesInputFM}/>
                 </div>
 
                 {this.state.insertingToDB ?
